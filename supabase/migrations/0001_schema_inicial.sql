@@ -1,4 +1,4 @@
--- Papelito Circular — esquema inicial (Fase 2)
+-- Papelito Circular — esquema inicial (Fase 2). Aplicado em 20/10/2026 no projeto Supabase "papelito-circular".
 -- Espelha src/domain/types.ts. Quantidades em numeric (sem erro de ponto flutuante).
 -- Pesos: numeric(14,3) em kg. Valores monetários: numeric(14,4) por kg.
 

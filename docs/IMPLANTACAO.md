@@ -25,3 +25,9 @@ Veja `.env.example`. Na Fase 1 nenhuma é obrigatória. Nunca versione `.env` co
 - [ ] `VITE_DATA_MODE=supabase` e chaves públicas configuradas como *secrets* do GitHub Actions.
 - [ ] Backup e retenção configurados.
 - [ ] Revisão de LGPD (dados de usuários) e de segurança antes do piloto.
+
+## Situação em 20/10/2026
+- **GitHub:** repositório público `yzkadu/Papelito-Circular`; GitHub Pages ativado com origem "GitHub Actions" (https://yzkadu.github.io/Papelito-Circular/).
+- **Supabase:** projeto `papelito-circular` (região us-east-1, plano gratuito). Migrações `0001_schema_inicial.sql` e `0002_unidades_padrao.sql` aplicadas pelo SQL Editor. Verificado: 21 tabelas no esquema `public`, todas com RLS ativo, políticas por perfil, gatilhos de auditoria e 9 unidades de medida.
+- **Ainda não feito:** o aplicativo continua em modo demonstração (não lê nem grava no Supabase); não há usuários nem perfis cadastrados; inserções no estoque dependem da função RPC prevista na Fase 2.
+- **Atenção à região:** o projeto foi criado nos EUA. Para dados reais da operação, avaliar recriar em São Paulo (`sa-east-1`) por latência e LGPD antes de cadastrar qualquer informação.
