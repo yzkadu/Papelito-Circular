@@ -294,3 +294,72 @@ html.is-landing body {
   .vl-actions .vl-btn { width: 100%; }
   .vl-header-cta { display: none; }
 }
+
+/* ======================================================================
+ * Identidade Papelito (Guia de Marca 2025): preto #231F20 + amarelo #FCD930,
+ * títulos Beastly/Ultra em caixa alta, texto PP Neue Montreal, formas retas.
+ * ==================================================================== */
+.vl {
+  --bg: #231f20;
+  --muted: #e9e4d6;
+  --stat: #f4f1e8;
+  --yellow: #fcd930;
+  background: #231f20;
+  font-family: 'PP Neue Montreal', neueMontreal, 'Inter Tight', system-ui, sans-serif;
+}
+html.is-landing,
+html.is-landing body { background: #231f20 !important; }
+
+.vl-logo { gap: 10px; }
+.vl-logo svg.vl-wordmark { width: auto; height: calc(var(--logo) * 1.05); color: #fff; }
+.vl-logo span.suffix {
+  background: var(--yellow);
+  color: #231f20;
+  font-family: Beastly, Ultra, serif;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 3px 6px;
+  line-height: 1;
+  opacity: 1;
+}
+
+.vl-nav a {
+  border-radius: 0;
+  border: 1px solid rgba(252, 217, 48, 0.55);
+  background: rgba(35, 31, 32, 0.72);
+  color: #fff;
+  font-weight: 500;
+}
+.vl-nav a::before { background: linear-gradient(115deg, transparent 30%, rgba(252, 217, 48, 0.25) 50%, transparent 70%); }
+.vl-nav a:hover { background: var(--yellow); color: #231f20; border-color: var(--yellow); box-shadow: none; }
+
+.vl-btn { border-radius: 0; font-weight: 700; letter-spacing: -0.005em; }
+.vl-solid { background: var(--yellow); color: #231f20; border: 1px solid #231f20; box-shadow: none; }
+.vl-solid:hover { background: #fde62f; border-color: #231f20; box-shadow: 4px 4px 0 #fff; }
+.vl-ghost { background: rgba(35, 31, 32, 0.55); color: #fff; border: 1px solid #fff; }
+.vl-ghost:hover { background: #fff; color: #231f20; border-color: #fff; box-shadow: none; }
+
+.vl-badge { border-radius: 0; background: var(--yellow); color: #231f20; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: calc(var(--badge) - 1.5px); }
+.vl-badge svg { filter: none; }
+.vl-badge svg path { fill: #231f20; }
+
+.vl h1 {
+  font-family: Beastly, Ultra, 'Rockwell Bold', Rockwell, serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+  line-height: 1.02;
+}
+.vl h1 em {
+  font-family: inherit;
+  font-style: normal;
+  font-size: 1em;
+  letter-spacing: inherit;
+  color: var(--yellow);
+}
+.vl-lede { color: var(--muted); }
+.vl-burger { border-radius: 0; border-color: rgba(252, 217, 48, 0.6); }
+.vl-burger span { background: var(--yellow); }
+@media (max-width: 900px) { .vl-nav a { border-radius: 0; } }
+.vl h1 { font-size: calc(var(--h1) * 0.82); }

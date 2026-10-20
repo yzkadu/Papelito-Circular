@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
-import { BrandMark } from '../components/layout/AppShell';
+import { PapelitoWordmark } from '../components/brand/PapelitoLogo';
 import './landing.css';
 
 const HERO_VIDEO =
@@ -64,10 +64,8 @@ export default function Landing() {
         <div className="vl-backdrop" onClick={() => setOpen(false)} />
         <header className="vl-header">
           <Link to="/" className="vl-logo vl-appear a-scale" style={d(0.08)} aria-label="Papelito Circular">
-            <BrandMark />
-            <span>
-              Papelito <span className="suffix">Circular</span>
-            </span>
+            <PapelitoWordmark className="vl-wordmark" />
+            <span className="suffix">Circular</span>
           </Link>
           <nav id="vl-nav" className="vl-nav" aria-label="Principal">
             {NAV.map((n) => (

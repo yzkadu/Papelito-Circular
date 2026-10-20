@@ -13,7 +13,7 @@ export function useFilters(s: Snapshot, days = 30) {
 type Dim = 'sector' | 'machine' | 'product' | 'material';
 
 const sel =
-  'h-9 max-w-full rounded-lg border border-paper-line bg-white px-2.5 text-sm text-ink shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20';
+  'h-9 max-w-full rounded-lg border border-paper-line bg-white px-2.5 text-sm text-ink shadow-sm focus:border-ink focus:outline-none focus:ring-2 focus:ring-brand-500/60';
 
 /** Filtros em uma única linha acima dos gráficos. */
 export function FilterBar({

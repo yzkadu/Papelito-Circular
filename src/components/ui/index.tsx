@@ -13,9 +13,9 @@ export const cx = (...c: (string | false | null | undefined)[]) => c.filter(Bool
 // ------------------------------------------------------------------ Botões
 type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-ink text-white hover:bg-ink-soft shadow-sm',
-  secondary: 'bg-white text-ink border border-paper-line hover:border-neutral-300 hover:bg-neutral-50',
-  ghost: 'text-neutral-600 hover:bg-neutral-100 hover:text-ink',
+  primary: 'bg-brand-500 text-ink font-bold border border-ink hover:bg-brand-300 hover:shadow-[3px_3px_0_#231F20] active:shadow-none',
+  secondary: 'bg-white text-ink font-semibold border border-ink hover:bg-brand-50',
+  ghost: 'text-ink-muted hover:bg-brand-50 hover:text-ink',
   danger: 'bg-red-600 text-white hover:bg-red-700',
 };
 
@@ -33,7 +33,7 @@ export function Button({
       {...rest}
       disabled={disabled || loading}
       className={cx(
-        'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+        'inline-flex items-center justify-center gap-2 rounded-none transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
         size === 'sm' ? 'h-8 px-3 text-sm' : 'h-10 px-4 text-sm',
         VARIANTS[variant],
         className,
@@ -54,7 +54,7 @@ export function CardHeader({ title, description, actions }: { title: ReactNode; 
   return (
     <div className="flex flex-wrap items-start justify-between gap-3 border-b border-paper-line px-5 py-4">
       <div className="min-w-0">
-        <h2 className="text-[15px] font-semibold tracking-tight text-ink">{title}</h2>
+        <h2 className="text-[15px] font-bold tracking-tight text-ink">{title}</h2>
         {description && <p className="mt-0.5 text-sm text-neutral-500">{description}</p>}
       </div>
       {actions && <div className="flex min-w-0 max-w-full flex-wrap items-center gap-2">{actions}</div>}
@@ -66,8 +66,8 @@ export function PageHeader({ title, description, actions, eyebrow }: { title: st
   return (
     <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div className="min-w-0">
-        {eyebrow && <p className="mb-1 text-xs font-medium uppercase tracking-[0.08em] text-brand-700">{eyebrow}</p>}
-        <h1 className="text-2xl font-semibold tracking-tight text-ink md:text-[28px]">{title}</h1>
+        {eyebrow && <p className="mb-2 inline-block bg-brand-500 px-2 py-0.5 text-[11px] font-bold uppercase tracking-[0.1em] text-ink">{eyebrow}</p>}
+        <h1 className="display text-[28px] text-ink md:text-[40px]">{title}</h1>
         {description && <p className="mt-1 max-w-3xl text-sm text-neutral-600 md:text-[15px]">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
@@ -87,7 +87,7 @@ const TONES: Record<Tone, string> = {
 };
 export function Badge({ tone = 'neutral', children, className }: { tone?: Tone; children: ReactNode; className?: string }) {
   return (
-    <span className={cx('inline-flex items-center gap-1 whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset', TONES[tone], className)}>
+    <span className={cx('inline-flex items-center gap-1 whitespace-nowrap rounded-none px-2 py-0.5 text-xs font-semibold ring-1 ring-inset', TONES[tone], className)}>
       {children}
     </span>
   );
@@ -103,7 +103,7 @@ export function DemoTag({ className }: { className?: string }) {
 
 // ------------------------------------------------------------------ Formulários
 const control =
-  'block w-full rounded-lg border border-paper-line bg-white px-3 text-[15px] text-ink placeholder:text-neutral-400 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:bg-neutral-50 aria-[invalid=true]:border-red-400 aria-[invalid=true]:ring-red-100';
+  'block w-full rounded-lg border border-paper-line bg-white px-3 text-[15px] text-ink placeholder:text-neutral-400 shadow-sm transition focus:border-ink focus:outline-none focus:ring-2 focus:ring-brand-500/60 disabled:bg-neutral-50 aria-[invalid=true]:border-red-400 aria-[invalid=true]:ring-red-100';
 
 export function Field({ label, error, hint, children, htmlFor, className }: { label: string; error?: string; hint?: string; children: ReactNode; htmlFor: string; className?: string }) {
   return (
@@ -147,7 +147,7 @@ export function FormGrid({ children }: { children: ReactNode }) {
 export function LoadingState({ label = 'Carregando dados…' }: { label?: string }) {
   return (
     <div role="status" className="flex min-h-[40vh] flex-col items-center justify-center gap-3 text-neutral-500">
-      <Loader2 className="h-6 w-6 animate-spin text-brand-600" aria-hidden />
+      <Loader2 className="h-6 w-6 animate-spin text-ink" aria-hidden />
       <span className="text-sm">{label}</span>
     </div>
   );

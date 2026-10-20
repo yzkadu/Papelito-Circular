@@ -5,30 +5,13 @@ import { useProfile } from '../../auth/ProfileContext';
 import { ROLES, roleLabel, type Permission } from '../../auth/roles';
 import { useData } from '../../data/DataProvider';
 import type { Role } from '../../domain/types';
+import { CircularLogo } from '../brand/PapelitoLogo';
 import { Button, cx, ErrorState, LoadingState } from '../ui';
 import { useToast } from '../ui/Toast';
 import { NAV } from './nav';
 
-export function BrandMark({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden>
-      <path d="M6.2 15.6A6.5 6.5 0 0 1 16.9 7.3" stroke="currentColor" strokeWidth="2.2" fill="none" strokeLinecap="round" />
-      <path d="M17.8 8.4A6.5 6.5 0 0 1 7.1 16.7" stroke="#48b38e" strokeWidth="2.2" fill="none" strokeLinecap="round" />
-      <path d="M14.6 5.6l2.6 1.4-1.2 2.7" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M9.4 18.4l-2.6-1.4 1.2-2.7" stroke="#48b38e" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 export function Logo({ dark = false }: { dark?: boolean }) {
-  return (
-    <span className={cx('inline-flex items-center gap-2 font-semibold tracking-tight', dark ? 'text-white' : 'text-ink')}>
-      <BrandMark className="h-6 w-6" />
-      <span className="whitespace-nowrap text-[15px]">
-        Papelito <span className="font-normal opacity-70">Circular</span>
-      </span>
-    </span>
-  );
+  return <CircularLogo dark={dark} />;
 }
 
 function ProfileSwitcher({ compact }: { compact?: boolean }) {
@@ -73,7 +56,7 @@ function SideNav({ onNavigate }: { onNavigate?: () => void }) {
                     className={({ isActive }) =>
                       cx(
                         'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition',
-                        isActive ? 'bg-white/10 font-medium text-white' : 'text-neutral-300 hover:bg-white/5 hover:text-white',
+                        isActive ? 'bg-brand-500 font-bold text-ink' : 'text-neutral-300 hover:bg-white/5 hover:text-brand-500',
                       )
                     }
                   >
@@ -147,7 +130,7 @@ function MobileBottomNav({ onMore }: { onMore: () => void }) {
             <NavLink
               to={i.to}
               end={i.to === '/app'}
-              className={({ isActive }) => cx('flex flex-col items-center gap-0.5 py-2 text-[11px]', isActive ? 'font-medium text-brand-700' : 'text-neutral-500')}
+              className={({ isActive }) => cx('flex flex-col items-center gap-0.5 py-2 text-[11px]', isActive ? 'bg-brand-500 font-bold text-ink' : 'text-neutral-500')}
             >
               <i.icon className="h-5 w-5" aria-hidden />
               {i.short}
@@ -177,7 +160,7 @@ export function AppShell() {
   }, []);
 
   const sidebar = (
-    <div className="flex h-full flex-col bg-black px-3 py-5 text-white">
+    <div className="flex h-full flex-col bg-ink px-3 py-5 text-white">
       <div className="mb-6 flex items-center justify-between px-3">
         <Link to="/" aria-label="Papelito Circular — página inicial">
           <Logo dark />

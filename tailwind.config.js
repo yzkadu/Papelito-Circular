@@ -1,22 +1,37 @@
-/** @type {import('tailwindcss').Config} */
+/**
+ * Identidade visual Papelito — Guia de Marca 2025 (pasta REBRANDING/MANUAL):
+ *  - Cores principais: amarelo #FCD930 (70%) · preto #231F20 (30%)
+ *  - Secundárias: marrom #3C1F0B · branco · amarelo-limão #FDE62F · mel #FFC943 ·
+ *    verde #10A958 · laranja #FF6019 · rosa #FF25B7 · lilás #AE69FF
+ *  - Tipografia: Beastly (títulos, caixa alta) → na web, Ultra (indicada pelo guia);
+ *    PP Neue Montreal (texto corrido; licenciada) → substituta gratuita Inter Tight
+ * @type {import('tailwindcss').Config}
+ */
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
-        serif: ['"Instrument Serif"', '"Times New Roman"', 'serif'],
+        sans: ['"PP Neue Montreal"', 'neueMontreal', '"Inter Tight"', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+        display: ['Beastly', 'Ultra', '"Rockwell Bold"', 'Rockwell', 'serif'],
       },
       colors: {
-        ink: { DEFAULT: '#111111', soft: '#2b2b2b' },
-        paper: { DEFAULT: '#f7f6f2', line: '#e6e3da' },
+        ink: { DEFAULT: '#231F20', soft: '#3A3536', muted: '#6B6566' },
+        paper: { DEFAULT: '#FBF9F2', line: '#E9E4D6' },
         brand: {
-          50: '#effaf5', 100: '#d8f2e6', 200: '#b3e4cf', 300: '#7fcfb1', 400: '#48b38e',
-          500: '#259873', 600: '#187a5d', 700: '#14624c', 800: '#134e3e', 900: '#114034',
+          50: '#FFFBE6', 100: '#FEF4BF', 200: '#FDE98A', 300: '#FDE62F', 400: '#FCDD4F',
+          500: '#FCD930', 600: '#E3C21B', 700: '#5E4F00', 800: '#3C1F0B', 900: '#231F20',
         },
-        accent: { 400: '#f58a4b', 500: '#f26b1d', 600: '#d95312' },
+        honey: '#FFC943',
+        cocoa: '#3C1F0B',
+        leaf: '#10A958',
+        flame: '#FF6019',
+        pink: '#FF25B7',
+        lilac: '#AE69FF',
+        accent: { 400: '#FF8A55', 500: '#FF6019', 600: '#D94A0A' },
       },
-      boxShadow: { card: '0 1px 2px rgba(17,17,17,0.04), 0 1px 1px rgba(17,17,17,0.03)' },
+      borderRadius: { md: '2px', lg: '3px', xl: '4px', '2xl': '6px' },
+      boxShadow: { card: '0 1px 0 rgba(35,31,32,0.06)' },
     },
   },
   plugins: [],

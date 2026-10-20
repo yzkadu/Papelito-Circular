@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Fontes da marca: se a Papelito tiver a licença web da Beastly e da PP Neue Montreal,
+ * basta adicionar os @font-face aqui (arquivos em public/fonts, fora do repositório público
+ * se a licença não permitir redistribuição). Sem elas, valem Ultra e Inter Tight.
+ */
+
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
@@ -11,11 +17,29 @@
   body {
     @apply bg-paper font-sans text-ink;
   }
+  ::selection {
+    background: #fcd930;
+    color: #231f20;
+  }
   input[type='number']::-webkit-inner-spin-button {
     opacity: 0.4;
   }
   details > summary::-webkit-details-marker {
     display: none;
+  }
+}
+
+@layer components {
+  /* Títulos no estilo da marca: Beastly/Ultra em caixa alta. */
+  .display {
+    @apply font-display uppercase;
+    letter-spacing: 0.005em;
+    line-height: 0.98;
+    font-weight: 400;
+  }
+  /* Link da marca: sublinhado amarelo grosso. */
+  .brand-link {
+    @apply font-medium text-ink underline decoration-brand-500 decoration-[3px] underline-offset-4 hover:decoration-ink;
   }
 }
 

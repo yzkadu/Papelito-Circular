@@ -1,8 +1,12 @@
 /**
- * Paleta categórica validada (ordem fixa — a cor segue a entidade, nunca a posição).
- * Fonte: paleta de referência de visualização de dados (CVD-safe nas posições adjacentes).
+ * Cores de gráfico a partir da paleta secundária do Guia de Marca Papelito 2025.
+ * Ordem fixa validada (contraste, faixa de luminosidade, separação para daltonismo):
+ * verde #10A958 · laranja #FF6019 · lilás #AE69FF · rosa #FF25B7 — todas as checagens PASS em fundo branco.
+ * O amarelo da marca NÃO é usado como cor de dado (contraste insuficiente sobre branco).
+ * Séries únicas usam o preto da marca.
  */
-export const SERIES = ['#2a78d6', '#eb6834', '#1baf7a', '#eda100', '#e87ba4', '#008300', '#4a3aa7', '#e34948'] as const;
+export const INK = '#231F20';
+export const SERIES = ['#10A958', '#FF6019', '#AE69FF', '#FF25B7'] as const;
 
 /** Cores fixas por classificação de resíduo (identidade estável em todas as telas). */
 export const WASTE_COLORS = {
@@ -12,10 +16,10 @@ export const WASTE_COLORS = {
   rejeito: SERIES[3],
 } as const;
 
-export const AXIS = { stroke: '#a8a59c', fontSize: 12, tickLine: false, axisLine: false } as const;
-export const GRID = { stroke: '#e9e7e0', strokeDasharray: '0', vertical: false } as const;
+export const AXIS = { stroke: '#8C8687', fontSize: 12, tickLine: false, axisLine: false } as const;
+export const GRID = { stroke: '#ECE8DD', strokeDasharray: '0', vertical: false } as const;
 export const TOOLTIP_STYLE = {
-  contentStyle: { borderRadius: 10, border: '1px solid #e6e3da', boxShadow: '0 6px 20px rgba(0,0,0,0.08)', fontSize: 13 },
-  labelStyle: { color: '#111', fontWeight: 600, marginBottom: 4 },
-  cursor: { fill: 'rgba(17,17,17,0.04)' },
+  contentStyle: { borderRadius: 3, border: '1px solid #231F20', boxShadow: '4px 4px 0 #FCD930', fontSize: 13 },
+  labelStyle: { color: '#231F20', fontWeight: 700, marginBottom: 4 },
+  cursor: { fill: 'rgba(252,217,48,0.18)' },
 } as const;

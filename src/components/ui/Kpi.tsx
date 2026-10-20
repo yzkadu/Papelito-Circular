@@ -27,7 +27,7 @@ export function KpiCard({
     <div className="group relative flex flex-col rounded-xl border border-paper-line bg-white p-4 shadow-card">
       <div className="flex items-start justify-between gap-2">
         <p className="text-[13px] font-medium leading-tight text-neutral-600">{def.label}</p>
-        {icon && <span className={cx('grid h-8 w-8 shrink-0 place-items-center rounded-lg', tone === 'warn' ? 'bg-orange-50 text-accent-600' : 'bg-brand-50 text-brand-700')}>{icon}</span>}
+        {icon && <span className={cx('grid h-8 w-8 shrink-0 place-items-center', tone === 'warn' ? 'bg-flame text-white' : 'bg-brand-500 text-ink')}>{icon}</span>}
       </div>
       <p className="mt-2 text-[22px] font-semibold leading-tight tracking-tight text-ink tabular-nums md:text-2xl" data-testid={`kpi-${indicator}`}>
         {value}

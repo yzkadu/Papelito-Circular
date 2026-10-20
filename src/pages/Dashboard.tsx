@@ -14,7 +14,7 @@ import {
   YAxis,
 } from 'recharts';
 import { useProfile } from '../auth/ProfileContext';
-import { AXIS, GRID, SERIES, TOOLTIP_STYLE, WASTE_COLORS } from '../components/charts';
+import { AXIS, GRID, INK, TOOLTIP_STYLE, WASTE_COLORS } from '../components/charts';
 import { FilterBar, useFilters } from '../components/Filters';
 import { Card, CardHeader, DataTable, DemoTag, EmptyState, PageHeader } from '../components/ui';
 import { KpiCard } from '../components/ui/Kpi';
@@ -48,24 +48,24 @@ export default function Dashboard() {
         actions={<DemoTag />}
       />
 
-      <div className="mb-6 grid overflow-hidden rounded-2xl bg-black text-white md:grid-cols-[1fr_260px]">
+      <div className="mb-6 grid overflow-hidden border border-ink bg-brand-500 text-ink md:grid-cols-[1fr_260px]">
         <div className="p-6 md:p-8">
-          <p className="text-xs uppercase tracking-[0.12em] text-brand-300">Papelito Brasil · Capital Recicláveis</p>
-          <h2 className="mt-2 text-xl font-medium tracking-tight md:text-2xl">
-            Da matéria-prima à <em className="font-serif text-[1.1em] font-normal text-neutral-400">destinação comprovada</em>
+          <p className="inline-block bg-ink px-2 py-0.5 text-[11px] font-bold uppercase tracking-[0.1em] text-brand-500">Papelito Brasil · Capital Recicláveis</p>
+          <h2 className="display mt-3 text-[26px] !leading-[1.22] md:text-[34px]">
+            Da matéria-prima à <span className="bg-ink px-1.5 text-brand-500 [box-decoration-break:clone]">destinação comprovada</span>
           </h2>
-          <p className="mt-2 max-w-xl text-sm text-neutral-400">
+          <p className="mt-3 max-w-xl text-sm text-ink/80">
             Rastreie o caminho do material: consumo na produção → aparas e perdas classificadas → estoque de resíduos → coleta → pesagem conferida → documento de destinação.
           </p>
           <div className="mt-4 flex flex-wrap gap-2 text-xs">
             {['Produção', 'Aparas', 'Estoque', 'Coleta', 'Pesagem', 'Destinação'].map((step, i) => (
-              <span key={step} className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-white/5 px-2.5 py-1">
-                <span className="tabular-nums text-neutral-500">{i + 1}</span> {step}
+              <span key={step} className="inline-flex items-center gap-1.5 border border-ink bg-white px-2.5 py-1 font-semibold">
+                <span className="tabular-nums text-ink-muted">{i + 1}</span> {step}
               </span>
             ))}
           </div>
         </div>
-        <div className="relative hidden md:block">
+        <div className="relative hidden border-l border-ink bg-ink md:block">
           <img
             src={PAPELITO_IMG}
             alt="Imagem institucional Papelito"
@@ -112,15 +112,15 @@ export default function Dashboard() {
                 <AreaChart data={d.timeSeries} margin={{ left: 8, right: 16 }}>
                   <defs>
                     <linearGradient id="mpFill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={SERIES[0]} stopOpacity={0.22} />
-                      <stop offset="100%" stopColor={SERIES[0]} stopOpacity={0} />
+                      <stop offset="0%" stopColor="#FCD930" stopOpacity={0.55} />
+                      <stop offset="100%" stopColor="#FCD930" stopOpacity={0.05} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid {...GRID} />
                   <XAxis dataKey="date" tickFormatter={shortDate} {...AXIS} minTickGap={24} />
                   <YAxis {...AXIS} width={56} tickFormatter={(v) => fmtNumber(v, 0)} />
                   <Tooltip {...TOOLTIP_STYLE} labelFormatter={(l) => fmtDate(String(l))} formatter={(v) => [fmtKg(Number(v)), 'Matéria-prima']} />
-                  <Area type="monotone" dataKey="mpKg" stroke={SERIES[0]} strokeWidth={2} fill="url(#mpFill)" activeDot={{ r: 4 }} />
+                  <Area type="monotone" dataKey="mpKg" stroke={INK} strokeWidth={2} fill="url(#mpFill)" activeDot={{ r: 4 }} />
                 </AreaChart>
               </ResponsiveContainer>
             )}
@@ -157,7 +157,7 @@ export default function Dashboard() {
                   <XAxis type="number" domain={[80, 100]} {...AXIS} tickFormatter={(v) => `${v}%`} />
                   <YAxis type="category" dataKey="name" {...AXIS} width={56} />
                   <Tooltip {...TOOLTIP_STYLE} formatter={(v) => [`${fmtNumber(Number(v), 1)}%`, 'Aprovação']} />
-                  <Bar dataKey="rate" fill={SERIES[2]} radius={[0, 4, 4, 0]} barSize={18} label={{ position: 'right', fontSize: 12, fill: '#52514e', formatter: (v: number) => `${fmtNumber(v, 1)}%` }} />
+                  <Bar dataKey="rate" fill={INK} radius={[0, 4, 4, 0]} barSize={18} label={{ position: 'right', fontSize: 12, fill: '#52514e', formatter: (v: number) => `${fmtNumber(v, 1)}%` }} />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -165,7 +165,7 @@ export default function Dashboard() {
         </Card>
 
         <Card>
-          <CardHeader title="Estoque atual de resíduos (kg)" description={`Por material, em ${fmtDate(filters.to)}`} actions={<Link to="/app/estoque" className="text-sm text-brand-700 hover:underline">Ver estoque</Link>} />
+          <CardHeader title="Estoque atual de resíduos (kg)" description={`Por material, em ${fmtDate(filters.to)}`} actions={<Link to="/app/estoque" className="brand-link text-sm">Ver estoque</Link>} />
           <div className="h-56 px-2 pb-3 pt-4">
             {stockData.length === 0 ? (
               <EmptyState title="Sem saldo em estoque" />
@@ -176,7 +176,7 @@ export default function Dashboard() {
                   <XAxis dataKey="name" {...AXIS} />
                   <YAxis {...AXIS} width={56} tickFormatter={(v) => fmtNumber(v, 0)} />
                   <Tooltip {...TOOLTIP_STYLE} labelFormatter={(_, p) => p?.[0]?.payload?.full ?? ''} formatter={(v) => [fmtKg(Number(v)), 'Saldo']} />
-                  <Bar dataKey="kg" fill={SERIES[0]} radius={[4, 4, 0, 0]} barSize={36} />
+                  <Bar dataKey="kg" fill={INK} radius={[4, 4, 0, 0]} barSize={36} />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -188,7 +188,7 @@ export default function Dashboard() {
         <CardHeader
           title="Produção por máquina"
           description="Quantidades na unidade do produto; consumo em kg"
-          actions={<Link to="/app/producao/maquinas" className="text-sm text-brand-700 hover:underline">Lançar produção</Link>}
+          actions={<Link to="/app/producao/maquinas" className="brand-link text-sm">Lançar produção</Link>}
         />
         <DataTable
           caption="Produção por máquina"

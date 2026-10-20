@@ -107,7 +107,7 @@ function Stepper({ status }: { status: CollectionStatus }) {
     <ol className="grid grid-cols-4 gap-1" aria-label="Etapas da coleta">
       {COLLECTION_FLOW.map((st, i) => (
         <li key={st.id} className="flex flex-col gap-1.5">
-          <span className={cx('h-1.5 rounded-full', status === 'cancelada' ? 'bg-red-200' : i <= idx ? 'bg-brand-500' : 'bg-neutral-200')} />
+          <span className={cx('h-1.5 rounded-full', status === 'cancelada' ? 'bg-red-200' : i <= idx ? 'bg-ink' : 'bg-neutral-200')} />
           <span className={cx('text-[11px] leading-tight', i <= idx ? 'font-medium text-ink' : 'text-neutral-400')}>{st.label}</span>
         </li>
       ))}
@@ -281,7 +281,7 @@ export default function Collections() {
             rowKey={(r) => r.id}
             empty={<EmptyState title="Nenhuma coleta" />}
             columns={[
-              { key: 'n', header: 'Coleta', cell: (r) => <button className={cx('whitespace-nowrap font-medium hover:underline', selected?.id === r.id && 'text-brand-700')} onClick={() => setSelectedId(r.id)}>{r.number}</button> },
+              { key: 'n', header: 'Coleta', cell: (r) => <button className={cx('whitespace-nowrap font-medium hover:underline', selected?.id === r.id && 'bg-brand-500 px-1 text-ink')} onClick={() => setSelectedId(r.id)}>{r.number}</button> },
               { key: 'd', header: 'Data', cell: (r) => fmtDate(r.collectedDate ?? r.scheduledDate) },
               { key: 's', header: 'Status', cell: (r) => <Badge tone={STATUS_TONE[r.status]}>{STATUS_LABEL[r.status]}</Badge> },
               { key: 'i', header: 'Informado', align: 'right', cell: (r) => fmtKg(declaredTotal(r)) },
