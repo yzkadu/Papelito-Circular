@@ -195,7 +195,7 @@ export function AppShell() {
         </div>
       )}
       <div className="lg:pl-64">
-        {mode === 'demo' ? <DemoBar onMenu={() => setOpen(true)} /> : <div className="border-b bg-white px-4 py-3 text-sm"><button onClick={() => setOpen(true)} className="lg:hidden mr-3" aria-label="Abrir menu"><Menu className="inline h-5 w-5" /></button><span className="font-semibold">Papelito Circular</span><span className="ml-4 text-neutral-500">{roleLabel(role)}</span><span className="ml-4 text-amber-700">Dados operacionais em desenvolvimento</span></div>}
+        {mode === 'demo' ? <DemoBar onMenu={() => setOpen(true)} /> : <div className="border-b bg-white px-4 py-3 text-sm"><button onClick={() => setOpen(true)} className="lg:hidden mr-3" aria-label="Abrir menu"><Menu className="inline h-5 w-5" /></button><span className="font-semibold">Papelito Circular</span><span className="ml-4 text-neutral-500">{roleLabel(role)}</span><span className="ml-4 text-amber-700">Dados demonstrativos · não inserir informações reais</span></div>}
         <main className="mx-auto max-w-[1400px] px-4 pb-28 pt-6 lg:px-8 lg:pb-12">
           {status === 'loading' && <LoadingState />}
           {status === 'error' && <ErrorState message={error ?? 'Erro desconhecido.'} onRetry={reload} />}
@@ -216,9 +216,9 @@ export function RequirePermission({ permission, children }: { permission: Permis
       <ShieldAlert className="mx-auto h-8 w-8 text-neutral-400" aria-hidden />
       <h1 className="mt-3 text-lg font-semibold">Área restrita</h1>
       <p className="mt-1 text-sm text-neutral-600">
-        O perfil <strong>{roleLabel(role)}</strong> não tem acesso a esta área. Na demonstração, troque o perfil simulado no topo da página.
+        O perfil <strong>{roleLabel(role)}</strong> não tem acesso a esta área. Solicite ao administrador a autorização necessária.
       </p>
-      <p className="mt-3 text-xs text-neutral-500">Esta restrição é apenas visual. Na operação real ela será aplicada no servidor e no banco de dados.</p>
+      <p className="mt-3 text-xs text-neutral-500">O acesso às telas é controlado pelo perfil; a proteção dos dados reais depende das políticas do Supabase.</p>
       <Button variant="secondary" className="mt-4" onClick={() => history.back()}>
         Voltar
       </Button>
