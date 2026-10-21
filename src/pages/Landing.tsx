@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
+import { authMode } from '../auth/supabase';
 import { PapelitoWordmark } from '../components/brand/PapelitoLogo';
 import './landing.css';
 
@@ -74,8 +75,8 @@ export default function Landing() {
               </Link>
             ))}
           </nav>
-          <Link to="/app" className="vl-btn vl-solid vl-header-cta vl-appear a-scale" style={d(0.34)}>
-            Acessar demonstração
+          <Link to={authMode ? "/login" : "/app"} className="vl-btn vl-solid vl-header-cta vl-appear a-scale" style={d(0.34)}>
+            {authMode ? 'Entrar no sistema' : 'Acessar demonstração'}
           </Link>
           <button
             className="vl-burger vl-appear a-scale"
@@ -117,7 +118,7 @@ export default function Landing() {
               Registre a produção, classifique aparas e perdas, controle o estoque de resíduos e acompanhe as coletas da Capital Recicláveis — com indicadores calculados a partir dos lançamentos.
             </p>
             <div className="vl-actions">
-              <Link to="/app" className="vl-btn vl-solid vl-appear a-btn" style={d(0.96)}>
+              <Link to={authMode ? "/login" : "/app"} className="vl-btn vl-solid vl-appear a-btn" style={d(0.96)}>
                 Acessar demonstração
               </Link>
               <Link to="/app/metodologia" className="vl-btn vl-ghost vl-appear a-side" style={d(1.1)}>
