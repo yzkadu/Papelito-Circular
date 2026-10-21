@@ -119,7 +119,7 @@ export default function Landing() {
             </p>
             <div className="vl-actions">
               <Link to={authMode ? "/login" : "/app"} className="vl-btn vl-solid vl-appear a-btn" style={d(0.96)}>
-                Acessar demonstração
+                {authMode ? 'Entrar no sistema' : 'Acessar demonstração'}
               </Link>
               <Link to="/app/metodologia" className="vl-btn vl-ghost vl-appear a-side" style={d(1.1)}>
                 Ver como os indicadores são calculados
@@ -153,7 +153,7 @@ export default function Landing() {
               <circle cx="12" cy="12" r="10" fill="#f26b1d" />
               <text x="12" y="16.2" textAnchor="middle" fontFamily="Inter, sans-serif" fontWeight="700" fontSize="12" fill="#fff">!</text>
             </svg>
-            Protótipo Fase 1 · dados fictícios · sem autenticação real
+            Protótipo Fase 1 · dados demonstrativos · controle de acesso em implantação
           </span>
         </footer>
       </div>
