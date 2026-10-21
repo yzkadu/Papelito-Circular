@@ -16,7 +16,6 @@ import Dashboard from './pages/Dashboard';
 import Finance from './pages/Finance';
 import Landing from './pages/Landing';
 import MachineProduction from './pages/MachineProduction';
-import ManualProduction from './pages/ManualProduction';
 import Methodology from './pages/Methodology';
 import Registry from './pages/Registry';
 import Stock from './pages/Stock';
@@ -32,7 +31,6 @@ export function AppRoutes() {
       <Route path="/app" element={<RequireSession><AppShell /></RequireSession>}>
         <Route index element={<HomeRedirect><Dashboard /></HomeRedirect>} />
         <Route path="producao/maquinas" element={guard('producao:ver', <MachineProduction />)} />
-        <Route path="producao/manual" element={guard('producao:ver', <ManualProduction />)} />
         <Route path="residuos" element={guard('residuos:ver', <Waste />)} />
         <Route path="estoque" element={guard('estoque:ver', <Stock />)} />
         <Route path="coletas" element={guard('coletas:ver', <Collections />)} />
