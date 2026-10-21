@@ -4,8 +4,8 @@
 O código agora suporta **Supabase Auth (e-mail e senha)**, seis papéis cadastrados em `public.profiles` e página **Usuários e permissões** só para administradores. No modo Supabase, não existe botão para alternar livremente de perfil. O módulo de produção ainda usa o repositório demonstrativo no navegador; **não usar para produção real**.
 
 ## Preparação
-1. Utilize o projeto Supabase da Papelito e confirme se `supabase/migrations/0001_schema_inicial.sql` já foi aplicado. O comentário no arquivo diz que foi aplicado em 20/10/2026, mas isso deve ser conferido no painel.
-2. Execute o novo `supabase/migrations/0002_admin_profiles.sql` pelo editor SQL do Supabase.
+1. Projeto Supabase já identificado: `vvptifpffubgmrecfujd`. O esquema base já está instalado e a migração de proteção dos perfis já foi aplicada em 21/10/2026.
+2. A migração `supabase/migrations/0002_admin_profiles.sql` foi aplicada no projeto. Não reaplique sem revisar o estado atual.
 3. Em **Authentication → Providers → Email**, habilite login por e-mail/senha e desabilite cadastro público. Mantenha confirmação de e-mail se forem usar convites.
 4. Em **Authentication → Users**, convide/crie o usuário da administração. Copie o UUID do usuário (não a senha).
 5. No **SQL Editor**, execute, substituindo o UUID real e o nome:
@@ -16,11 +16,7 @@ O código agora suporta **Supabase Auth (e-mail e senha)**, seis papéis cadastr
    set display_name = excluded.display_name, role = excluded.role, active = true;
    ```
    Faça isso apenas com acesso administrativo ao SQL Editor.
-6. Em **GitHub → Settings → Secrets and variables → Actions → Variables** configure:
-   - `VITE_AUTH_MODE`: `supabase`
-   - `VITE_SUPABASE_URL`: URL do projeto
-   - `VITE_SUPABASE_PUBLISHABLE_KEY`: chave pública publishable
-   Nunca use a chave `service_role` no frontend ou no repositório.
+6. O workflow do GitHub já contém, como valores públicos de fallback, a URL e a chave **publishable** do projeto. Essas duas configurações podem ser substituídas por variáveis do GitHub Actions. Para ativar a autenticação, altere `VITE_AUTH_MODE` de `demo` para `supabase` no workflow ou configure a variável do repositório com esse valor; faça isso **somente depois de vincular o primeiro usuário admin e testar**. Nunca use a chave `service_role` no frontend ou no repositório.
 7. Em **Supabase → Authentication → URL Configuration** configure:
    - Site URL: `https://yzkadu.github.io/Papelito-Circular/`
    - Redirect URL permitida: `https://yzkadu.github.io/Papelito-Circular/`
