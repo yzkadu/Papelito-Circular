@@ -22,7 +22,8 @@ export type Permission =
   | 'cadastros:ver'
   | 'cadastros:editar'
   | 'auditoria:ver'
-  | 'demo:redefinir';
+  | 'demo:redefinir'
+  | 'usuarios:gerenciar';
 
 export const ROLES: { id: Role; label: string; description: string }[] = [
   { id: 'operador', label: 'Operador de produção', description: 'Registra atividades e consulta informações operacionais.' },
@@ -48,7 +49,7 @@ const MATRIX: Record<Role, Permission[]> = {
   admin: [
     'dashboard:ver', 'producao:ver', 'producao:registrar', 'producao:validar', 'residuos:ver', 'residuos:registrar',
     'estoque:ver', 'estoque:movimentar', 'coletas:ver', 'coletas:gerenciar', 'coletas:confirmar', 'financeiro:ver',
-    'custos:editar', 'cadastros:ver', 'cadastros:editar', 'auditoria:ver', 'demo:redefinir',
+    'custos:editar', 'cadastros:ver', 'cadastros:editar', 'auditoria:ver', 'demo:redefinir', 'usuarios:gerenciar',
   ],
 };
 
