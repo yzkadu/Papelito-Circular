@@ -29,7 +29,7 @@ export default function Login() {
       <div className="w-full max-w-md rounded-2xl border border-paper-line bg-white p-8 shadow-card">
         <Link to="/" aria-label="Página inicial"><CircularLogo /></Link>
         <h1 className="mt-8 text-2xl font-bold text-ink">Acesso ao Papelito Circular</h1>
-        <p className="mt-2 text-sm text-neutral-600">Entre com a conta autorizada para sua área. Não há cadastro público.</p>
+        <p className="mt-2 text-sm text-neutral-600">Entre com a conta autorizada para sua área. Seu perfil é definido pelo administrador. Não há cadastro público.</p>
         {status === 'not_configured' ? (
           <p role="alert" className="mt-6 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
             Autenticação não configurada neste ambiente. Informe o administrador.
@@ -58,7 +58,7 @@ export default function Login() {
             </button>
           </form>
         )}
-        <p className="mt-6 text-xs text-neutral-500">Credenciais e permissões são gerenciadas pelo administrador no Supabase.</p>
+        <p className="mt-6 text-xs text-neutral-500">Cada área pode ter sua conta funcional. Não compartilhe senhas fora da equipe autorizada.</p>
       </div>
     </main>
   );
