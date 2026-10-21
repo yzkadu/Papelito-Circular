@@ -27,13 +27,15 @@ O código agora suporta **Supabase Auth (e-mail e senha)**, seis papéis cadastr
    (o aplicativo usa `HashRouter`).
 8. Faça o merge do PR após testes e configurações validadas. O GitHub Pages atualizará a versão publicada.
 
-## Operação dos usuários
-- Cada pessoa entra com seu próprio e-mail e senha.
-- Não existe senha mestre embutida no site. O administrador tem um usuário normal no Auth com papel `admin` no banco.
-- A administração **não cria senhas**. Crie ou convide usuários pelo Supabase Auth; depois, no app, o administrador vincula o UUID, nome e perfil.
-- Os papéis disponíveis são: operador, supervisor, ambiental, capital, financeiro e admin.
-- Os perfis ficam bloqueados até existir um registro ativo em `public.profiles`.
-- Alterações de acesso dependem das políticas RLS do Supabase, não apenas da interface.
+## Contas por área — modelo simplificado do piloto
+- A proposta é uma **conta funcional por área**: Administração (admin), Indústria (supervisor), Operação (operador), Gestão Ambiental (ambiental), Capital Recicláveis (capital) e Financeiro (financeiro).
+- Cada conta é criada em **Supabase Authentication → Users** com um e-mail funcional controlado pela organização e depois vinculada a um perfil em **Acessos por área** no aplicativo.
+- Esse modelo usa o login Supabase existente; não há senha mestre gravada no código. Nunca adicione senhas ao GitHub.
+- **Contas de administrador individuais são altamente recomendadas**: uma conta compartilhada de admin impede saber qual pessoa alterou dados ou permissões. Para ações sensíveis, use MFA e credenciais próprias.
+- Contas compartilhadas de outros setores também perdem rastreabilidade individual. Restringir permissões, usar cofre de senhas e trocar credenciais em desligamentos. A auditoria mostra a área, não a pessoa.
+- Contas sem perfil ativo em public.profiles permanecem bloqueadas.
+- A autenticação funciona somente quando VITE_AUTH_MODE=supabase e as variáveis públicas são configuradas.
+- Os módulos de produção continuam em modo demonstrativo/localStorage: ainda não usar dados reais.
 
 ## Limitações e segurança
 - As telas industriais ainda usam `DemoRepository` + `localStorage`. O login não transforma essas telas em banco operacional multiusuário e **não protege os dados que forem colocados no armazenamento local do navegador**.
