@@ -21,6 +21,7 @@ export type Permission =
   | 'custos:editar'
   | 'cadastros:ver'
   | 'cadastros:editar'
+  | 'importacao:ver'
   | 'auditoria:ver'
   | 'demo:redefinir'
   | 'usuarios:gerenciar';
@@ -52,6 +53,8 @@ const MATRIX: Record<Role, Permission[]> = {
     'custos:editar', 'cadastros:ver', 'cadastros:editar', 'auditoria:ver', 'demo:redefinir', 'usuarios:gerenciar',
   ],
 };
+
+for (const role of ['supervisor', 'ambiental', 'financeiro', 'admin'] as const) MATRIX[role].push('importacao:ver');
 
 export const can = (role: Role, p: Permission) => MATRIX[role].includes(p);
 export const roleLabel = (r: Role) => ROLES.find((x) => x.id === r)?.label ?? r;

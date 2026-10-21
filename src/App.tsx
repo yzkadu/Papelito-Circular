@@ -11,6 +11,7 @@ import { DataProvider } from './data/DataProvider';
 import type { DataRepository } from './data/repository';
 import type { Role } from './domain/types';
 import Audit from './pages/Audit';
+import Imports from './pages/Imports';
 import Collections from './pages/Collections';
 import Dashboard from './pages/Dashboard';
 import Finance from './pages/Finance';
@@ -39,6 +40,7 @@ export function AppRoutes() {
         <Route path="auditoria" element={guard('auditoria:ver', <Audit />)} />
         <Route path="usuarios" element={guard('usuarios:gerenciar', <UserAdministration />)} />
         <Route path="metodologia" element={<Methodology />} />
+        <Route path="importacao" element={guard('importacao:ver', <Imports />)} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
