@@ -1,6 +1,9 @@
 import { useMemo } from 'react';
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { ProfileProvider } from './auth/ProfileContext';
+import { RequireSession } from './auth/RequireSession';
+import Login from './pages/Login';
+import UserAdministration from './pages/UserAdministration';
 import type { Permission } from './auth/roles';
 import { AppShell, HomeRedirect, RequirePermission } from './components/layout/AppShell';
 import { ToastProvider } from './components/ui/Toast';
@@ -25,7 +28,8 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
-      <Route path="/app" element={<AppShell />}>
+      <Route path="/login" element={<Login />} />
+      <Route path="/app" element={<RequireSession><AppShell /></RequireSession>}>
         <Route index element={<HomeRedirect><Dashboard /></HomeRedirect>} />
         <Route path="producao/maquinas" element={guard('producao:ver', <MachineProduction />)} />
         <Route path="producao/manual" element={guard('producao:ver', <ManualProduction />)} />
@@ -35,6 +39,7 @@ export function AppRoutes() {
         <Route path="financeiro" element={guard('financeiro:ver', <Finance />)} />
         <Route path="cadastros" element={guard('cadastros:ver', <Registry />)} />
         <Route path="auditoria" element={guard('auditoria:ver', <Audit />)} />
+        <Route path="usuarios" element={guard('usuarios:gerenciar', <UserAdministration />)} />
         <Route path="metodologia" element={<Methodology />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
