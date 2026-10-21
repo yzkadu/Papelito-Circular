@@ -4,6 +4,7 @@ import {
   Factory,
   Hand,
   History,
+  FileSpreadsheet,
   LayoutDashboard,
   Scissors,
   Settings2,
@@ -31,6 +32,7 @@ export const NAV: NavItem[] = [
   { to: '/app/coletas', label: 'Coletas · Capital Recicláveis', short: 'Coletas', icon: Truck, permission: 'coletas:ver', group: 'Resíduos' },
   { to: '/app/financeiro', label: 'Indicadores financeiros', short: 'Financeiro', icon: Wallet, permission: 'financeiro:ver', group: 'Gestão' },
   { to: '/app/cadastros', label: 'Cadastros', short: 'Cadastros', icon: Settings2, permission: 'cadastros:ver', group: 'Gestão' },
+  { to: '/app/importacao', label: 'Conferência de planilhas', short: 'Planilhas', icon: FileSpreadsheet, permission: 'importacao:ver', group: 'Gestão' },
   { to: '/app/auditoria', label: 'Histórico e auditoria', short: 'Auditoria', icon: History, permission: 'auditoria:ver', group: 'Gestão' },
   { to: '/app/metodologia', label: 'Metodologia dos indicadores', short: 'Metodologia', icon: BookOpen, group: 'Gestão' },
 ];
