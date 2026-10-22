@@ -24,11 +24,14 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
+      - run: npm install --no-audit --no-fund
       - run: npm test
       - run: npm run build
         env:
           VITE_DATA_MODE: demo
+          VITE_AUTH_MODE: supabase
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || 'https://vvptifpffubgmrecfujd.supabase.co' }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_FdXSDXzTdFcGlYhYnkafJQ_l8DmkJ6X' }}
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name != 'pull_request'
         with:
