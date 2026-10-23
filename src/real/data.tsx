@@ -37,9 +37,8 @@ export async function loadRealData(): Promise<RealData> {
   for (let i = 0; i < responses.length; i++) if (responses[i].error) {
     throw new Error('Não foi possível carregar ' + keys[i] + ': ' + responses[i].error!.message);
   }
-  const state: RealData = { ...empty };
-  keys.forEach((key, i) => { (state[key] as unknown[]) = responses[i].data || []; });
-  return state;
+  const values = Object.fromEntries(keys.map((key, i) => [key, responses[i].data || []]));
+  return values as RealData;
 }
 export async function insertReal(table: keyof RealData, values: Record<string, unknown>) {
   if (!supabase) throw new Error('Supabase não configurado.');
