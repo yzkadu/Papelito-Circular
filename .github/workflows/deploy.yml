@@ -1,4 +1,4 @@
-name: Testes e publicação (demonstração)
+name: Testes e publicação (operação real)
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
       - run: npm test
       - run: npm run build
         env:
-          VITE_DATA_MODE: demo
+          VITE_DATA_MODE: supabase
           VITE_AUTH_MODE: supabase
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || 'https://vvptifpffubgmrecfujd.supabase.co' }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_FdXSDXzTdFcGlYhYnkafJQ_l8DmkJ6X' }}
