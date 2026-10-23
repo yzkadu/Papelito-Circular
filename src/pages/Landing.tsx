@@ -11,9 +11,9 @@ const d = (s: number, extra?: CSSProperties) => ({ '--d': `${s}s`, ...extra }) a
 
 const NAV = [
   { to: '/app', label: 'Dashboard', anim: 'a-scale', delay: 0.16 },
-  { to: '/app/producao/maquinas', label: 'Produção', anim: 'a-soft', delay: 0.28 },
+  { to: '/app/residuos', label: 'Aparas e perdas', anim: 'a-soft', delay: 0.28 },
   { to: '/app/coletas', label: 'Coletas', anim: 'a-scale', delay: 0.4 },
-  { to: '/app/metodologia', label: 'Metodologia', anim: 'a-soft', delay: 0.52 },
+  { to: '/app/cadastros', label: 'Cadastros', anim: 'a-soft', delay: 0.52 },
 ];
 
 export default function Landing() {
@@ -115,7 +115,7 @@ export default function Landing() {
               </span>
             </h1>
             <p className="vl-lede vl-appear a-soft" style={d(0.82, { animationDuration: '1.25s' })}>
-              Registre a produção, classifique aparas e perdas, controle o estoque de resíduos e acompanhe as coletas da Capital Recicláveis — com indicadores calculados a partir dos lançamentos.
+              Cadastre máquinas e materiais reais, registre aparas e perdas por equipamento, acompanhe o saldo reciclável e controle as coletas com dados gravados no Supabase.
             </p>
             <div className="vl-actions">
               <Link to={authMode ? "/login" : "/app"} className="vl-btn vl-solid vl-appear a-btn" style={d(0.96)}>
@@ -139,7 +139,7 @@ export default function Landing() {
               <rect x="13.4" y="2.6" width="7.2" height="18.8" rx="3.6" fill="url(#vlg2)" />
               <rect x="9.2" y="10.9" width="5.6" height="2.2" rx="1.1" fill="#4a4a4a" />
             </svg>
-            7 módulos integrados: produção, aparas, estoque e coletas
+            Cadastros, aparas, estoque e coletas em um só ambiente
           </span>
           <span className="vl-stat vl-appear a-stat" style={d(1.28)}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -153,7 +153,7 @@ export default function Landing() {
               <circle cx="12" cy="12" r="10" fill="#f26b1d" />
               <text x="12" y="16.2" textAnchor="middle" fontFamily="Inter, sans-serif" fontWeight="700" fontSize="12" fill="#fff">!</text>
             </svg>
-            Protótipo Fase 1 · dados demonstrativos · controle de acesso em implantação
+            Acesso autorizado · dados vinculados ao banco Supabase
           </span>
         </footer>
       </div>
