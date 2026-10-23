@@ -2,7 +2,7 @@
   "name": "papelito-circular",
   "private": true,
   "version": "0.1.0",
-  "description": "Papelito Circular — gestão de produção, aparas, estoque de resíduos e coletas (protótipo demonstrativo).",
+  "description": "Papelito Circular — gestão industrial com registros reais no Supabase (operações, aparas e coletas).",
   "type": "module",
   "scripts": {
     "dev": "vite",
