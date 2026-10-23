@@ -31,9 +31,10 @@ export function today() {
   return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-');
 }
 export async function loadRealData(): Promise<RealData> {
-  if (!supabase) throw new Error('A conexão com Supabase não está configurada.');
+  const client = supabase;
+  if (!client) throw new Error('A conexão com Supabase não está configurada.');
   const keys = Object.keys(TABLES) as (keyof RealData)[];
-  const responses = await Promise.all(keys.map(key => supabase.from(TABLES[key]).select('*').order('created_at', { ascending: false }).limit(1000)));
+  const responses = await Promise.all(keys.map(key => client.from(TABLES[key]).select('*').order('created_at', { ascending: false }).limit(1000)));
   for (let i = 0; i < responses.length; i++) if (responses[i].error) {
     throw new Error('Não foi possível carregar ' + keys[i] + ': ' + responses[i].error!.message);
   }
