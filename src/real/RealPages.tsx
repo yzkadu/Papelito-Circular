@@ -1,10 +1,10 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
 import { Link, NavLink, Navigate, Outlet } from 'react-router-dom';
-import { Boxes, ClipboardList, Database, Factory, FileSpreadsheet, Gauge, LogOut, PackageCheck, Settings2, ShieldCheck, Truck, type LucideIcon } from 'lucide-react';
+import { Boxes, ClipboardList, Database, Factory, FileSpreadsheet, Gauge, LogOut, Settings2, ShieldCheck, Truck, type LucideIcon } from 'lucide-react';
 import { useProfile } from '../auth/ProfileContext';
 import { roleLabel } from '../auth/roles';
 import { Button, Card, CardHeader, EmptyState, ErrorState, Field, FormGrid, Input, LoadingState, PageHeader, Select, Textarea } from '../components/ui';
-import { fmtKg, stockByMaterial, today, totalKg, useRealData, type Entry, type Material } from './data';
+import { fmtKg, stockByMaterial, today, totalKg, useRealData, type Entry } from './data';
 
 const names = { apara_normal: 'Apara normal / prevista', perda_anormal: 'Perda anormal / evitável' };
 const destinations = { reciclagem: 'Reciclagem / estoque', reuso: 'Reutilização interna', rejeito: 'Rejeito' };
@@ -18,7 +18,6 @@ const nav: { to: string; label: string; icon: LucideIcon; roles: string[] }[] = 
   { to: '/app/importacao', label: 'Conferir CSV', icon: FileSpreadsheet, roles: ['admin','supervisor','ambiental','financeiro'] },
   { to: '/app/usuarios', label: 'Acessos por área', icon: ShieldCheck, roles: ['admin'] },
 ];
-const inputCss = 'w-full rounded-lg border border-paper-line px-3 py-2.5 text-sm';
 function PageNotice({ children }: { children: ReactNode }) {
   return <p className="mb-5 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">{children}</p>;
 }
