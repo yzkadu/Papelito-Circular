@@ -34,12 +34,21 @@ export async function loadRealData(): Promise<RealData> {
   const client = supabase;
   if (!client) throw new Error('A conexão com Supabase não está configurada.');
   const keys = Object.keys(TABLES) as (keyof RealData)[];
-  const responses = await Promise.all(keys.map(key => client.from(TABLES[key]).select('*').order('created_at', { ascending: false }).limit(1000)));
-  for (let i = 0; i < responses.length; i++) if (responses[i].error) {
-    throw new Error('Não foi possível carregar ' + keys[i] + ': ' + responses[i].error!.message);
-  }
-  const values = Object.fromEntries(keys.map((key, i) => [key, responses[i].data || []]));
-  return values as RealData;
+  const results = await Promise.all(keys.map(async key => {
+    const rows: unknown[] = [];
+    const pageSize = 500;
+    let offset = 0;
+    while (true) {
+      const { data, error } = await client.from(TABLES[key]).select('*')
+        .order('created_at', { ascending: false }).range(offset, offset + pageSize - 1);
+      if (error) throw new Error('Não foi possível carregar ' + key + ': ' + error.message);
+      rows.push(...(data || []));
+      if (!data || data.length < pageSize) break;
+      offset += pageSize;
+    }
+    return [key, rows];
+  }));
+  return Object.fromEntries(results) as RealData;
 }
 export async function insertReal(table: keyof RealData, values: Record<string, unknown>) {
   if (!supabase) throw new Error('Supabase não configurado.');
