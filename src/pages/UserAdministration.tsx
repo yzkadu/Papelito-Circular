@@ -118,7 +118,7 @@ export default function UserAdministration() {
       </form>
       <p className="text-xs text-neutral-500">
         Contas compartilhadas não identificam quem fez cada registro. Prefira contas pessoais para administradores. A segurança dos dados depende das políticas RLS e de um repositório Supabase real.
-        Os módulos produtivos ainda utilizam dados demonstrativos, se habilitados.
+        Cadastros e lançamentos industriais do ambiente operacional são gravados no Supabase; os acessos compartilhados identificam a área, não cada pessoa.
       </p>
     </section>
   );
