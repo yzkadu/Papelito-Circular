@@ -11,37 +11,37 @@ const checklist = [
   },
   {
     title: 'Comunidade externa elegível',
-    description: 'Confirme com a faculdade uma entidade ou coletivo que realmente atenda públicos em vulnerabilidade. A Papelito e a Capital, por si só, não comprovam esse requisito.',
-    proof: 'Confirmação do professor e identificação autorizada do parceiro',
+    description: 'Identifique uma entidade ou coletivo que trabalhe com públicos em vulnerabilidade social, faça contato e inicie uma relação real. A Papelito e a Capital, por si só, não comprovam esse requisito.',
+    proof: 'Declaração de Responsabilidade para a entidade e registro do contato real',
   },
   {
     title: 'Ação educativa com troca de saberes',
-    description: 'Planeje oficina, formação digital ou educação ambiental com participação ativa da comunidade; faça escuta inicial e incorpore sugestões.',
-    proof: 'Plano da atividade, registro de execução, material didático e devolutiva',
+    description: 'Construa o Projeto de Ação Comunitária em comum acordo com as lideranças da entidade. A ação pode incluir oficina, formação ou educação ambiental, desde que responda à necessidade identificada.',
+    proof: 'Projeto de Ação Comunitária, Carta de Aceite, material da ação e comprovação de participação',
   },
   {
     title: 'Validação do benefício',
-    description: 'Compare as necessidades identificadas com a experiência depois da ação. Registre melhorias, limitações e feedback real dos participantes.',
-    proof: 'Questionário pós-atividade, relato de participantes e ajustes realizados',
+    description: 'Compare as necessidades identificadas com a experiência após a ação, registrando feedback real para o Relatório Final e o depoimento reflexivo do estudante.',
+    proof: 'Relatório Final, lista de frequência e depoimento pessoal escrito, em áudio ou vídeo',
   },
 ];
 
 const deliveries = [
   ['Declaração de responsabilidade', 'Documento da atividade, conforme modelo acadêmico'],
   ['Projeto e carta de aceite', 'Aceite da instituição/parceiro e escopo validado'],
-  ['Registro de participação', 'Frequência ou comprovantes com autorização de uso'],
+  ['Lista de frequência', 'Presença na ação comunitária, conforme modelo acadêmico'],
   ['Relatório final', 'Diagnóstico, ação realizada, resultados e limitações'],
-  ['Depoimento pessoal', 'Aprendizado, envolvimento com a comunidade e reflexão crítica'],
+  ['Depoimento pessoal', 'Texto, vídeo ou áudio com reflexões autênticas do estudante'],
 ];
 
 export default function ExtensionPage() {
   return (
     <div className="pc-extension">
-      <PageHeader eyebrow="Projeto acadêmico" title="Extensão & impacto" description="Organize as exigências acadêmicas e registre, fora do sistema até haver autorização, apenas evidências reais das ações realizadas." />
+      <PageHeader eyebrow="Projeto acadêmico" title="Extensão & impacto" description="Critérios da disciplina Extensão: Cooperação, Humanismo Solidário e Redes e Comunidades (UCB). As entregas exigem ações reais, aceite e comprovações." />
       <div className="pc-extension-intro">
         <span className="pc-eyebrow" style={{color:'#fcd930'}}>PAPELITO CIRCULAR · EXTENSÃO UNIVERSITÁRIA</span>
         <h2 className="mt-3">A tecnologia é o meio.<br/>A comunidade é parte do propósito.</h2>
-        <p>Um aplicativo para melhorar o processo industrial não comprova, sozinho, extensão universitária. É preciso demonstrar uma necessidade real, participação ativa, troca de conhecimentos e contribuição verificável à comunidade externa.</p>
+        <p>Um aplicativo para melhorar o processo industrial não comprova, sozinho, a atividade comunitária exigida pela disciplina. É necessário contato real com entidade ou coletivo que atenda públicos em vulnerabilidade social, projeto construído com suas lideranças e execução documentada.</p>
       </div>
 
       <div className="pc-home-columns">
@@ -56,7 +56,7 @@ export default function ExtensionPage() {
         <section className="pc-home-panel">
           <span className="pc-eyebrow">FRENTE 02 · COMUNIDADE</span>
           <h2>Necessidade social</h2>
-          <p>Se a disciplina exige atendimento a públicos vulneráveis, será indispensável um parceiro social real e uma atividade útil aos participantes. Uma cooperativa ou associação de catadores interessada é uma possibilidade, não uma parceria já confirmada.</p>
+          <p>O plano de ensino exige a busca de uma entidade ou coletivo que atue em projetos voltados a pessoas em situação de vulnerabilidade social. Uma cooperativa ou associação de catadores interessada é uma possibilidade, não uma parceria já confirmada.</p>
           <div className="pc-check-step"><span><Users size={17}/></span><div><strong>Público e parceiro elegíveis</strong><small>Precisam ser identificados e aceitos pela faculdade</small></div></div>
           <div className="pc-check-step"><span><Handshake size={17}/></span><div><strong>Ação participativa de formação</strong><small>Oficina, escuta, devolutiva e documentação mediante consentimento</small></div></div>
         </section>
@@ -84,7 +84,7 @@ export default function ExtensionPage() {
       </section>
       <div className="pc-next-actions mt-6">
         <School size={22}/><div><strong>Antes de declarar a atividade como extensão válida</strong>
-          <p>Confirme por escrito com o professor os critérios específicos de público, prazo, horas, documentos e participação comunitária.</p></div>
+          <p>O plano exige comunidade vulnerável e documentos específicos. Confirme no AVA os modelos e prazos: a disciplina informa que trabalhos fora do prazo não são considerados.</p></div>
       </div>
     </div>
   );
