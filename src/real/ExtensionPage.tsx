@@ -1,91 +1,105 @@
-import { ArrowRight, ClipboardCheck, FileCheck2, Handshake, School, Users } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { PageHeader } from '../components/ui';
-import './real.css';
+import { useState, type FormEvent } from 'react';
+import { CheckCircle2, ClipboardCheck, FileCheck2, FileLock2, FolderOpen, GraduationCap, Paperclip, ShieldCheck, Users } from 'lucide-react';
+import { PageHeader, Button, Card, CardHeader, Field, FormGrid, Input, Select, Textarea, EmptyState } from '../components/ui';
+import { removePrivateEvidence, signEvidence, today, uploadPrivateEvidence, useRealData } from './data';
 
-const checklist = [
-  {
-    title: 'Diagnóstico de necessidade real',
-    description: 'Converse com quem utiliza ou será beneficiado pela solução. Registre o problema, a situação atual, quem é afetado e quais resultados são úteis.',
-    proof: 'Registro de escuta, formulário ou reunião com data e autorização',
-  },
-  {
-    title: 'Comunidade externa elegível',
-    description: 'Identifique uma entidade ou coletivo que trabalhe com públicos em vulnerabilidade social, faça contato e inicie uma relação real. A Papelito e a Capital, por si só, não comprovam esse requisito.',
-    proof: 'Declaração de Responsabilidade para a entidade e registro do contato real',
-  },
-  {
-    title: 'Ação educativa com troca de saberes',
-    description: 'Construa o Projeto de Ação Comunitária em comum acordo com as lideranças da entidade. A ação pode incluir oficina, formação ou educação ambiental, desde que responda à necessidade identificada.',
-    proof: 'Projeto de Ação Comunitária, Carta de Aceite, material da ação e comprovação de participação',
-  },
-  {
-    title: 'Validação do benefício',
-    description: 'Compare as necessidades identificadas com a experiência após a ação, registrando feedback real para o Relatório Final e o depoimento reflexivo do estudante.',
-    proof: 'Relatório Final, lista de frequência e depoimento pessoal escrito, em áudio ou vídeo',
-  },
+const stages=[
+  {key:'necessidade',label:'Necessidade identificada',help:'Problema real relatado pela Papelito ou Capital, com data e interlocução'},
+  {key:'diagnostico',label:'Diagnóstico inicial',help:'Situação anterior da pesagem, rastreamento ou coleta'},
+  {key:'aceite',label:'Aceite e parceria',help:'Documento de aceite ou confirmação real da instituição parceira'},
+  {key:'planejamento',label:'Plano de intervenção',help:'Objetivos, atividades e responsabilidades acordadas'},
+  {key:'execucao',label:'Execução da atividade',help:'Demonstração, capacitação, implantação ou entrega realizada'},
+  {key:'frequencia',label:'Participação e frequência',help:'Registro real da participação, com consentimento quando necessário'},
+  {key:'devolutiva',label:'Resultados e devolutiva',help:'Avaliação da Capital/Papelito sobre o benefício, problemas e melhorias'},
+  {key:'relatorio',label:'Relatório final',help:'Documento acadêmico efetivamente elaborado'},
+  {key:'depoimento',label:'Depoimento pessoal',help:'Reflexão autoral sobre a execução e a experiência'}
 ];
-
-const deliveries = [
-  ['Declaração de responsabilidade', 'Documento da atividade, conforme modelo acadêmico'],
-  ['Projeto e carta de aceite', 'Aceite da instituição/parceiro e escopo validado'],
-  ['Lista de frequência', 'Presença na ação comunitária, conforme modelo acadêmico'],
-  ['Relatório final', 'Diagnóstico, ação realizada, resultados e limitações'],
-  ['Depoimento pessoal', 'Texto, vídeo ou áudio com reflexões autênticas do estudante'],
-];
-
-export default function ExtensionPage() {
-  return (
-    <div className="pc-extension">
-      <PageHeader eyebrow="Projeto acadêmico" title="Extensão & impacto" description="Critérios da disciplina Extensão: Cooperação, Humanismo Solidário e Redes e Comunidades (UCB). As entregas exigem ações reais, aceite e comprovações." />
-      <div className="pc-extension-intro">
-        <span className="pc-eyebrow" style={{color:'#fcd930'}}>PAPELITO CIRCULAR · EXTENSÃO UNIVERSITÁRIA</span>
-        <h2 className="mt-3">A tecnologia é o meio.<br/>A comunidade é parte do propósito.</h2>
-        <p>Um aplicativo para melhorar o processo industrial não comprova, sozinho, a atividade comunitária exigida pela disciplina. É necessário contato real com entidade ou coletivo que atenda públicos em vulnerabilidade social, projeto construído com suas lideranças e execução documentada.</p>
+export default function ExtensionPage(){
+  const {data,create}=useRealData();
+  const [category,setCategory]=useState('necessidade'),[title,setTitle]=useState(''),[description,setDescription]=useState(''),[date,setDate]=useState(today()),[documentRef,setDocumentRef]=useState('');
+  const [file,setFile]=useState<File|null>(null),[saving,setSaving]=useState(false),[error,setError]=useState(''),[message,setMessage]=useState('');
+  const [signed,setSigned]=useState<{id:string,url:string}|null>(null);
+  const found=new Set(data.evidence.map(e=>e.category));
+  async function save(e:FormEvent) {
+    e.preventDefault();
+    if(!title.trim()||description.trim().length<8)return;
+    setSaving(true);setError('');setMessage('');
+    let path:string|null=null;
+    try{
+      if(file)path=await uploadPrivateEvidence(file);
+      await create('evidence',{category,title:title.trim(),description:description.trim(),occurred_on:date,document_reference:documentRef.trim()||null,storage_path:path});
+      setMessage('Registro acadêmico salvo. A validação da faculdade depende das evidências e da entrega oficial.');
+      setTitle('');setDescription('');setDocumentRef('');setFile(null);
+      const input=document.getElementById('evidence-file') as HTMLInputElement|null;
+      if(input)input.value='';
+    }catch(ex){
+      if(path)await removePrivateEvidence(path);
+      setError(ex instanceof Error?ex.message:'Não foi possível armazenar a evidência.');
+    }finally{setSaving(false);}
+  }
+  async function openFile(id:string,path:string) {
+    setError('');setSigned(null);
+    try{setSigned({id,url:await signEvidence(path)});}
+    catch(e){setError(e instanceof Error?e.message:'Falha ao gerar acesso temporário.');}
+  }
+  return <section>
+    <PageHeader eyebrow="Projeto acadêmico" title="Extensão & evidências" description="Organização real da ação Papelito–Capital, preservando a necessidade identificada, a participação e os comprovantes necessários para a entrega acadêmica."/>
+    <div className="pc-extension-intro">
+      <span className="pc-eyebrow" style={{color:'#fcd930'}}>PROJETO PAPELITO CIRCULAR · PARCERIA OPERACIONAL</span>
+      <h2 className="mt-3">Da necessidade à melhoria comprovada.</h2>
+      <p>Instituição de realização: Papelito Brasil. Beneficiária operacional: Capital Recicláveis. O formato foi informado como aceito pela faculdade. Registre aqui apenas o que foi efetivamente diagnosticado, realizado e documentado — a publicação do aplicativo não substitui a ação nem os documentos oficiais.</p>
+    </div>
+    <div className="mb-6 grid gap-3 sm:grid-cols-3">
+      <Card><div className="p-5"><ClipboardCheck size={19}/><p className="mt-3 text-sm">Categorias com registros</p><strong className="text-3xl font-black">{found.size} / {stages.length}</strong></div></Card>
+      <Card><div className="p-5"><FileCheck2 size={19}/><p className="mt-3 text-sm">Registros documentados</p><strong className="text-3xl font-black">{data.evidence.length}</strong></div></Card>
+      <Card><div className="p-5"><FileLock2 size={19}/><p className="mt-3 text-sm">Arquivos anexados</p><strong className="text-3xl font-black">{data.evidence.filter(x=>x.storage_path).length}</strong><p className="text-xs text-neutral-500">Armazenamento privado</p></div></Card>
+    </div>
+    <div className="pc-home-columns">
+      <div className="pc-home-panel"><span className="pc-eyebrow">NECESSIDADE</span><h2>Problema real da parceria</h2>
+        <p>Documente com a Papelito e a Capital o que precisa melhorar no fluxo de coleta: separação, identificação, pesagem, informação antecipada ou conferência das quantidades. Não presuma que esses problemas existam sem escuta real.</p>
+        <div className="pc-check-step"><span><Users size={18}/></span><div><strong>Conversa com os envolvidos</strong><small>Data, participantes, necessidade e autorização de uso das informações</small></div></div>
       </div>
-
-      <div className="pc-home-columns">
-        <section className="pc-home-panel">
-          <span className="pc-eyebrow">FRENTE 01 · INDUSTRIAL</span>
-          <h2>Necessidade operacional</h2>
-          <p>O sistema pode apoiar a Papelito na rastreabilidade de aparas previstas e perdas evitáveis por máquina, conferência de estoque reciclável e registros de coleta. O impacto real deve ser medido em piloto autorizado pela Elisa.</p>
-          <div className="pc-check-step"><span><ClipboardCheck size={17}/></span><div><strong>Diagnóstico com a indústria</strong><small>Aguardando registros efetivos de necessidades e critérios de aceite</small></div></div>
-          <div className="pc-check-step"><span><FileCheck2 size={17}/></span><div><strong>Piloto com dados reais</strong><small>Selecionar máquina, material, responsável e período</small></div></div>
-          <Link to="/app/cadastros" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold underline">Ir aos cadastros <ArrowRight size={16}/></Link>
-        </section>
-        <section className="pc-home-panel">
-          <span className="pc-eyebrow">FRENTE 02 · COMUNIDADE</span>
-          <h2>Necessidade social</h2>
-          <p>O plano de ensino exige a busca de uma entidade ou coletivo que atue em projetos voltados a pessoas em situação de vulnerabilidade social. Uma cooperativa ou associação de catadores interessada é uma possibilidade, não uma parceria já confirmada.</p>
-          <div className="pc-check-step"><span><Users size={17}/></span><div><strong>Público e parceiro elegíveis</strong><small>Precisam ser identificados e aceitos pela faculdade</small></div></div>
-          <div className="pc-check-step"><span><Handshake size={17}/></span><div><strong>Ação participativa de formação</strong><small>Oficina, escuta, devolutiva e documentação mediante consentimento</small></div></div>
-        </section>
-      </div>
-
-      <div className="pc-home-headline"><h2>Comprovação da necessidade e da execução</h2><span className="pc-status is-inactive">Planejamento — nada declarado concluído</span></div>
-      <div className="pc-extension-grid">
-        {checklist.map((item, index) => <article key={item.title} className="pc-extension-item">
-          <span className="pc-eyebrow">CRITÉRIO {String(index+1).padStart(2,'0')}</span>
-          <h3>{item.title}</h3>
-          <p>{item.description}</p>
-          <small><strong>Evidência sugerida:</strong> {item.proof}</small>
-        </article>)}
-      </div>
-      <div className="pc-home-headline"><h2>Documentos de entrega</h2><span className="text-xs text-neutral-600">Confirmar modelos e prazo no AVA</span></div>
-      <section className="pc-master-panel">
-        {deliveries.map(([title,description],i)=><div className="pc-master-item" key={title}>
-          <div className="pc-master-identity">
-            <span className="pc-step-number">{String(i+1).padStart(2,'0')}</span>
-            <div><strong>{title}</strong><small>{description}</small></div>
-          </div>
-          <span className="pc-status is-inactive">Não verificado</span>
-          <span className="text-xs text-neutral-500">Requer evidência real</span>
-        </div>)}
-      </section>
-      <div className="pc-next-actions mt-6">
-        <School size={22}/><div><strong>Antes de declarar a atividade como extensão válida</strong>
-          <p>O plano exige comunidade vulnerável e documentos específicos. Confirme no AVA os modelos e prazos: a disciplina informa que trabalhos fora do prazo não são considerados.</p></div>
+      <div className="pc-home-panel"><span className="pc-eyebrow">RESULTADO</span><h2>Benefício demonstrável</h2>
+        <p>Ao longo do piloto, anote as mudanças implementadas, a forma de participação da Capital, exemplos reais de uso e o retorno dos responsáveis. Não afirme redução de custos ou perdas sem medições.</p>
+        <div className="pc-check-step"><span><GraduationCap size={18}/></span><div><strong>Comprovação para a faculdade</strong><small>Projeto, carta de aceite, ação, frequência, devolutiva, relatório e depoimento</small></div></div>
       </div>
     </div>
-  );
+    <Card className="mb-6"><CardHeader title="Checklist baseado nos registros reais" description="Registro existente não significa documento validado ou nota atribuída pela faculdade."/>
+      <div className="grid gap-2 p-5 sm:grid-cols-2">
+        {stages.map(s=><div className="flex items-start gap-3 border-b p-3" key={s.key}>
+          <span className={'mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded '+(found.has(s.key)?'bg-emerald-100 text-emerald-800':'bg-neutral-100 text-neutral-600')}>{found.has(s.key)?<CheckCircle2 size={18}/>:<ClipboardCheck size={18}/>}</span>
+          <div><strong className="text-sm">{s.label}</strong><p className="mt-1 text-xs text-neutral-600">{s.help}</p></div>
+        </div>)}
+      </div>
+    </Card>
+    <Card className="mb-6"><CardHeader title="Adicionar registro ou evidência" description="Pode anexar um PDF, JPG ou PNG (até 10 MB). O arquivo fica privado e acessível somente pela administração."/>
+      {error&&<p role="alert" className="mx-5 mt-4 rounded bg-red-50 p-3 text-sm text-red-800">{error}</p>}
+      {message&&<p role="status" className="mx-5 mt-4 rounded bg-green-50 p-3 text-sm text-green-900">{message}</p>}
+      <form onSubmit={e=>void save(e)} className="space-y-4 p-5">
+        <FormGrid>
+          <Field htmlFor="ev-cat" label="Etapa / tipo de evidência"><Select id="ev-cat" value={category} onChange={e=>setCategory(e.target.value)}>{stages.map(s=><option key={s.key} value={s.key}>{s.label}</option>)}</Select></Field>
+          <Field htmlFor="ev-day" label="Data efetiva"><Input id="ev-day" required type="date" max={today()} value={date} onChange={e=>setDate(e.target.value)}/></Field>
+          <Field htmlFor="ev-title" label="Título do registro"><Input id="ev-title" required minLength={4} maxLength={150} value={title} onChange={e=>setTitle(e.target.value)} placeholder="Ex.: alinhamento com o responsável"/></Field>
+          <Field htmlFor="ev-ref" label="Referência documental (opcional)"><Input id="ev-ref" maxLength={250} value={documentRef} onChange={e=>setDocumentRef(e.target.value)} placeholder="Protocolo, número ou documento"/></Field>
+          <Field htmlFor="ev-desc" label="O que ocorreu e qual necessidade foi atendida"><Textarea id="ev-desc" required minLength={8} maxLength={2500} value={description} onChange={e=>setDescription(e.target.value)} placeholder="Descreva somente os fatos realizados, sem dados inventados."/></Field>
+          <Field htmlFor="evidence-file" label="Comprovante (opcional)"><Input id="evidence-file" type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" onChange={e=>setFile(e.target.files?.[0]||null)}/><p className="mt-1 text-xs text-neutral-600"><Paperclip size={13} className="inline"/> Arquivos privados. Não anexe dados pessoais sem autorização.</p></Field>
+        </FormGrid>
+        <Button loading={saving} disabled={title.trim().length<4||description.trim().length<8}>Salvar evidência real</Button>
+      </form>
+    </Card>
+    <Card><CardHeader title="Histórico documental" description="Todos os registros são associados à conta administrativa e à data de lançamento."/>
+      {data.evidence.length===0?<EmptyState title="Nenhuma evidência cadastrada" description="Use o formulário acima conforme as atividades forem efetivamente realizadas."/>:<div className="divide-y">
+        {data.evidence.map(e=><article key={e.id} className="p-5">
+          <div className="flex flex-wrap items-center justify-between gap-3"><strong>{e.title}</strong><span className="rounded bg-brand-100 px-3 py-1 text-xs font-bold">{stages.find(s=>s.key===e.category)?.label||e.category}</span></div>
+          <p className="mt-1 text-xs text-neutral-600">{e.occurred_on} · {e.document_reference||'Sem referência adicional'}</p>
+          <p className="mt-2 whitespace-pre-line text-sm">{e.description}</p>
+          {e.storage_path&&<div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
+            <button onClick={()=>void openFile(e.id,e.storage_path!)} className="inline-flex items-center gap-2 font-semibold underline"><FolderOpen size={16}/> Gerar link privado (60 segundos)</button>
+            {signed?.id===e.id&&<a href={signed.url} target="_blank" rel="noopener noreferrer" className="rounded bg-ink px-3 py-2 font-semibold text-white">Abrir documento</a>}
+          </div>}
+        </article>)}
+      </div>}
+    </Card>
+    <p className="mt-5 flex gap-2 text-xs text-neutral-600"><ShieldCheck size={16}/> Esta área é administrativa e não publica documentos automaticamente. A entrega oficial continua sendo realizada no AVA conforme os modelos da faculdade.</p>
+  </section>;
 }
