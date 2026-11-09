@@ -2,6 +2,13 @@
 
 Sistema para registrar aparas normais, perdas anormais, materiais recicláveis e retiradas com **dados reais**, sob autenticação Supabase. Hospedado no GitHub Pages.
 
+## Integração Papelito–Capital e comprovação acadêmica
+- **Coletas e conferência**: a Papelito registra o peso retirado do estoque; a conta funcional da Capital confirma o peso recebido, data e comprovante. O aplicativo calcula a diferença sem alterar a pesagem original e sem somar novamente material físico.
+- **Importação CSV real**: modelos exportados do Excel são validados contra máquinas/materiais ativos; exige identificador único por linha para evitar importação duplicada, e grava até 300 registros por confirmação no Supabase.
+- **Extensão & evidências**: a administração registra o diagnóstico de necessidade, aceite, execução, frequência, devolutivas e documentos; anexos PDF/JPG/PNG ficam em bucket privado, com link temporário.
+- O formato da parceria **Papelito (instituição executora) → Capital Recicláveis (beneficiária operacional)** foi informado pelo estudante como aceito pela faculdade. A aprovação do formato não substitui a execução real nem os comprovantes previstos no plano de ensino.
+- **Requisito operacional**: a conta funcional `capital` precisa ser criada e autorizada no Supabase para confirmar recebimentos. Administração e ambiental não podem registrar uma confirmação em nome da Capital.
+
 ## Estado da versão
 - Não existe mais carregamento de dados demonstrativos no aplicativo publicado.
 - Os módulos operacionais foram recriados com base nas tabelas `public.circular_*` do Supabase.
