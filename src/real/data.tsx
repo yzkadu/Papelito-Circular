@@ -4,16 +4,20 @@ import { supabase } from '../auth/supabase';
 export interface Machine { id: string; code: string; name: string; active: boolean; created_at: string }
 export interface Material { id: string; code: string; name: string; recyclable: boolean; active: boolean; created_at: string }
 export interface Standard { id: string; machine_id: string; material_id: string; expected_pct: number; source: string; valid_from: string; created_at: string }
-export interface Entry { id: string; occurred_on: string; machine_id: string; material_id: string; batch_ref: string; origin_class: 'apara_normal' | 'perda_anormal'; destination: 'reciclagem' | 'reuso' | 'rejeito'; quantity_kg: number; reason: string | null; created_at: string }
+export interface Entry { id: string; occurred_on: string; machine_id: string; material_id: string; batch_ref: string; origin_class: 'apara_normal' | 'perda_anormal'; destination: 'reciclagem' | 'reuso' | 'rejeito'; quantity_kg: number; reason: string | null; created_at: string; import_source?: 'manual' | 'csv'; source_ref?: string | null }
 export interface Pickup { id: string; occurred_on: string; material_id: string; quantity_kg: number; partner: string; document_ref: string | null; notes: string | null; created_at: string }
-export type RealData = { machines: Machine[]; materials: Material[]; standards: Standard[]; entries: Entry[]; pickups: Pickup[] };
-const empty: RealData = { machines: [], materials: [], standards: [], entries: [], pickups: [] };
+export interface PickupConfirmation { id: string; pickup_id: string; received_on: string; received_kg: number; receipt_reference: string; notes: string | null; created_at: string }
+export interface AcademicEvidence { id: string; category: string; title: string; description: string; occurred_on: string; document_reference: string | null; storage_path: string | null; created_at: string }
+export type RealData = { machines: Machine[]; materials: Material[]; standards: Standard[]; entries: Entry[]; pickups: Pickup[]; confirmations: PickupConfirmation[]; evidence: AcademicEvidence[] };
+const empty: RealData = { machines: [], materials: [], standards: [], entries: [], pickups: [], confirmations: [], evidence: [] };
 const TABLES = {
   machines: 'circular_machines',
   materials: 'circular_materials',
   standards: 'circular_scrap_standards',
   entries: 'circular_entries',
   pickups: 'circular_pickups',
+  confirmations: 'circular_pickup_confirmations',
+  evidence: 'circular_academic_evidence',
 } as const;
 
 export function stockByMaterial(data: RealData): Record<string, number> {
@@ -55,6 +59,39 @@ export async function insertReal(table: keyof RealData, values: Record<string, u
   const { error } = await supabase.from(TABLES[table]).insert(values);
   if (error) throw new Error(error.message);
 }
+export async function importRealEntries(rows: Record<string, unknown>[]) {
+  if (!supabase) throw new Error('Supabase não configurado.');
+  if (!rows.length || rows.length > 300) throw new Error('Selecione de 1 a 300 linhas por importação.');
+  const { error } = await supabase.from('circular_entries').insert(rows);
+  if (error) throw new Error(error.code === '23505'
+    ? 'Pelo menos um identificador de origem já foi importado. Corrija os duplicados antes de tentar novamente.'
+    : error.message);
+}
+export async function uploadPrivateEvidence(file: File): Promise<string> {
+  if (!supabase) throw new Error('Supabase não configurado.');
+  const mimeToExtension: Record<string, string> = {'application/pdf':'pdf','image/png':'png','image/jpeg':'jpg'};
+  const ext = mimeToExtension[file.type];
+  if (!ext || file.size > 10485760 || file.size === 0) {
+    throw new Error('Anexe somente PDF, PNG ou JPG, até 10 MB.');
+  }
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (userError || !user) throw new Error('Sessão não autorizada para anexos.');
+  const path = user.id + '/' + crypto.randomUUID() + '.' + ext;
+  const { error } = await supabase.storage.from('papelito-circular-evidencias')
+    .upload(path, file, { contentType: file.type, upsert: false });
+  if (error) throw new Error('Falha ao armazenar o documento: ' + error.message);
+  return path;
+}
+export async function removePrivateEvidence(path: string) {
+  if (!supabase) return;
+  await supabase.storage.from('papelito-circular-evidencias').remove([path]);
+}
+export async function signEvidence(path: string): Promise<string> {
+  if (!supabase) throw new Error('Supabase não configurado.');
+  const {data, error} = await supabase.storage.from('papelito-circular-evidencias').createSignedUrl(path, 60);
+  if (error || !data) throw new Error(error?.message || 'Não foi possível abrir o anexo.');
+  return data.signedUrl;
+}
 export async function updateRealMaster(table: 'machines' | 'materials', id: string, changes: { code: string; name: string }) {
   if (!supabase) throw new Error('Supabase não configurado.');
   const { data, error } = await supabase.from(TABLES[table]).update(changes).eq('id', id).select('id').single();
@@ -71,6 +108,7 @@ interface DataContextValue {
   create: (table: keyof RealData, values: Record<string, unknown>) => Promise<void>;
   toggle: (table: 'machines' | 'materials', id: string, active: boolean) => Promise<void>;
   updateMaster: (table: 'machines' | 'materials', id: string, changes: { code: string; name: string }) => Promise<void>;
+  importEntries: (rows: Record<string, unknown>[]) => Promise<void>;
 }
 const Context = createContext<DataContextValue | null>(null);
 export function RealDataProvider({ children }: { children: ReactNode }) {
@@ -96,7 +134,11 @@ export function RealDataProvider({ children }: { children: ReactNode }) {
     await updateRealMaster(table, id, changes);
     await refresh();
   }, [refresh]);
-  const value = useMemo(() => ({ data, loading, error, refresh, create, toggle, updateMaster }), [data, loading, error, refresh, create, toggle, updateMaster]);
+  const importEntries = useCallback(async (rows: Record<string, unknown>[]) => {
+    await importRealEntries(rows);
+    await refresh();
+  }, [refresh]);
+  const value = useMemo(() => ({ data, loading, error, refresh, create, toggle, updateMaster, importEntries }), [data, loading, error, refresh, create, toggle, updateMaster, importEntries]);
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
 export function useRealData() {

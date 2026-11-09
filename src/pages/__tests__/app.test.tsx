@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { fmtKg, stockByMaterial, totalKg, type RealData } from '../../real/data';
 
-const base: RealData = { machines: [], materials: [], standards: [], entries: [], pickups: [] };
+const base: RealData = { machines: [], materials: [], standards: [], entries: [], pickups: [], confirmations: [], evidence: [] };
 describe('Ambiente operacional sem registros fictícios', () => {
   it('inicia sem métricas artificiais', () => {
     expect(base.machines).toHaveLength(0);
