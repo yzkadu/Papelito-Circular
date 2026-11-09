@@ -1,6 +1,6 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
 import { Link, NavLink, Navigate, Outlet } from 'react-router-dom';
-import { ArrowRight, Boxes, Check, ClipboardList, Database, Factory, FileSpreadsheet, Gauge, GraduationCap, Leaf, LogOut, PackageCheck, RefreshCw, Settings2, ShieldCheck, Truck, TrendingDown, type LucideIcon } from 'lucide-react';
+import { ArrowRight, Boxes, Check, ClipboardList, Factory, FileSpreadsheet, Gauge, GraduationCap, Leaf, LogOut, PackageCheck, RefreshCw, Settings2, ShieldCheck, Truck, TrendingDown, type LucideIcon } from 'lucide-react';
 import { useProfile } from '../auth/ProfileContext';
 import { roleLabel } from '../auth/roles';
 import { PapelitoWordmark } from '../components/brand/PapelitoLogo';
@@ -103,7 +103,7 @@ export function RealShell() {
           <strong>PAINEL OPERACIONAL</strong><span> / </span><span>Papelito Circular</span>
         </div>
         <div className="pc-topbar-right">
-          <span className="pc-live-pill"><span className="pc-live-dot"/>Supabase conectado</span>
+          <span className="pc-live-pill"><span className="pc-live-dot"/>{!loading && !error ? "Dados carregados" : "Verificando conexão"}</span>
           <button className="pc-refresh" onClick={() => void refresh()}><RefreshCw size={15}/> Atualizar</button>
         </div>
       </header>
