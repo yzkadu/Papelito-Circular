@@ -1,8 +1,11 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
 import { Link, NavLink, Navigate, Outlet } from 'react-router-dom';
-import { Boxes, ClipboardList, Database, Factory, FileSpreadsheet, Gauge, LogOut, Settings2, ShieldCheck, Truck, type LucideIcon } from 'lucide-react';
+import { ArrowRight, Boxes, Check, ClipboardList, Factory, FileSpreadsheet, Gauge, GraduationCap, Leaf, LogOut, PackageCheck, RefreshCw, Settings2, ShieldCheck, Truck, TrendingDown, type LucideIcon } from 'lucide-react';
 import { useProfile } from '../auth/ProfileContext';
 import { roleLabel } from '../auth/roles';
+import { PapelitoWordmark } from '../components/brand/PapelitoLogo';
+import ManagedMasters from './ManagedMasters';
+import './real.css';
 import { Button, Card, CardHeader, EmptyState, ErrorState, Field, FormGrid, Input, LoadingState, PageHeader, Select, Textarea } from '../components/ui';
 import { fmtKg, stockByMaterial, today, totalKg, useRealData, type Entry } from './data';
 
@@ -17,6 +20,7 @@ const nav: { to: string; label: string; icon: LucideIcon; roles: string[] }[] = 
   { to: '/app/coletas', label: 'Coletas', icon: Truck, roles: ['admin','supervisor','ambiental','financeiro','capital'] },
   { to: '/app/importacao', label: 'Conferir CSV', icon: FileSpreadsheet, roles: ['admin','supervisor','ambiental','financeiro'] },
   { to: '/app/usuarios', label: 'Acessos por área', icon: ShieldCheck, roles: ['admin'] },
+  { to: '/app/extensao', label: 'Extensão universitária', icon: GraduationCap, roles: ['admin'] },
 ];
 function PageNotice({ children }: { children: ReactNode }) {
   return <p className="mb-5 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">{children}</p>;
@@ -73,28 +77,41 @@ export function RealShell() {
   const { role, signOut } = useProfile();
   const { loading, error, refresh } = useRealData();
   const links = nav.filter(n => n.roles.includes(role));
-  return <div className="min-h-screen bg-paper lg:grid lg:grid-cols-[260px_minmax(0,1fr)]">
-    <aside className="bg-ink px-5 py-6 text-white">
-      <Link to="/" className="block text-2xl font-black tracking-tight text-brand-500">PAPELITO <span className="text-white">CIRCULAR</span></Link>
-      <p className="mb-6 mt-2 text-xs text-neutral-400">Ambiente operacional · Supabase</p>
-      <nav aria-label="Menu de operação" className="grid grid-cols-2 gap-1 sm:grid-cols-3 lg:grid-cols-1">
+  return <div className="pc-app pc-layout">
+    <aside className="pc-sidebar">
+      <Link to="/" className="pc-brand" aria-label="Papelito Circular — início">
+        <PapelitoWordmark className="pc-wordmark"/>
+        <div className="pc-brand-bottom"><span className="pc-brand-circular">CIRCULAR</span><small>GESTÃO INDUSTRIAL<br/>E SUSTENTABILIDADE</small></div>
+      </Link>
+      <p className="pc-sidebar-label">MÓDULOS DE OPERAÇÃO</p>
+      <nav aria-label="Menu de operação" className="pc-navigation">
         {links.map(n => <NavLink key={n.to} to={n.to} end={n.to==='/app'}
-          className={({ isActive }) => 'flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm ' + (isActive ? 'bg-brand-500 font-bold text-ink' : 'text-neutral-300 hover:bg-white/10')}>
-          <n.icon className="h-4 w-4 shrink-0" />{n.label}
+          className={({ isActive }) => 'pc-navlink'+(isActive ? ' is-active':'')}>
+          <n.icon aria-hidden="true" />{n.label}
         </NavLink>)}
       </nav>
-      <div className="mt-8 border-t border-white/10 pt-5 text-xs text-neutral-300">
-        <p>Perfil autenticado: <strong>{roleLabel(role)}</strong></p>
-        <button className="mt-3 inline-flex items-center gap-2 underline" onClick={() => void signOut()}><LogOut className="h-4 w-4"/>Sair</button>
+      <div className="pc-sidebar-spacer"/>
+      <div className="pc-profile"><span className="pc-avatar"><ShieldCheck size={18}/></span>
+        <div><strong>{roleLabel(role)}</strong><small>Conta autenticada</small></div>
       </div>
+      <button className="pc-signout" onClick={() => void signOut()}><LogOut size={16}/>Encerrar sessão</button>
     </aside>
-    <main className="min-w-0 px-4 py-8 sm:px-7 xl:px-10">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <span className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-600"><Database size={15}/> Dados reais · origem Supabase</span>
-        <button onClick={() => void refresh()} className="text-xs text-neutral-600 underline">Atualizar dados</button>
-      </div>
-      {loading ? <LoadingState label="Consultando registros reais..." /> : error ? <ErrorState message={error} onRetry={() => void refresh()} /> : <Outlet/>}
-    </main>
+    <div className="pc-main">
+      <header className="pc-topbar">
+        <div className="pc-topbar-left">
+          <span className="pc-topbar-mark"><Leaf size={16}/></span>
+          <strong>PAINEL OPERACIONAL</strong><span> / </span><span>Papelito Circular</span>
+        </div>
+        <div className="pc-topbar-right">
+          <span className="pc-live-pill"><span className="pc-live-dot"/>{!loading && !error ? "Dados carregados" : "Verificando conexão"}</span>
+          <button className="pc-refresh" onClick={() => void refresh()}><RefreshCw size={15}/> Atualizar</button>
+        </div>
+      </header>
+      <main className="pc-page">
+        {loading ? <LoadingState label="Consultando informações reais..." /> : error ?
+          <ErrorState message={error} onRetry={() => void refresh()}/> : <Outlet/>}
+      </main>
+    </div>
   </div>;
 }
 
@@ -107,65 +124,67 @@ export function RealHome() {
   const abnormal = data.entries.filter(e => e.origin_class === 'perda_anormal');
   const stock = Object.values(stockByMaterial(data)).reduce((a,b) => a+b,0);
   const stats = [
-    ['Aparas normais',hasEntries ? fmtKg(totalKg(normal)) : '—'],
-    ['Perdas anormais',hasEntries ? fmtKg(totalKg(abnormal)) : '—'],
-    ['Em estoque reciclável',hasEntries ? fmtKg(stock) : '—'],
-    ['Coletas registradas',data.pickups.length ? fmtKg(totalKg(data.pickups)) : '—'],
+    {label:'Aparas normais',value:hasEntries ? fmtKg(totalKg(normal)) : '—',note:'Geradas no processo',icon:PackageCheck},
+    {label:'Perdas anormais',value:hasEntries ? fmtKg(totalKg(abnormal)) : '—',note:'Ocorrências a investigar',icon:TrendingDown},
+    {label:'Estoque reciclável',value:hasEntries ? fmtKg(stock) : '—',note:'Saldo calculado',icon:Boxes},
+    {label:'Coletas registradas',value:data.pickups.length ? fmtKg(totalKg(data.pickups)) : '—',note:'Retiradas informadas',icon:Truck},
   ];
-  return <>
-    <PageHeader eyebrow="Operação real" title="Visão geral" description="Indicadores gerados exclusivamente a partir dos registros gravados no Supabase. Nenhum valor de demonstração."/>
-    {!hasEntries && <PageNotice>Base operacional vazia. Comece cadastrando suas máquinas e materiais; os indicadores serão calculados conforme os lançamentos reais.</PageNotice>}
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {stats.map(([label,value]) => <Card key={label}><div className="p-5"><p className="text-sm text-neutral-600">{label}</p><p className="mt-3 text-2xl font-bold">{value}</p></div></Card>)}
+  const steps = [
+    {label:'Máquinas reais',status:data.machines.length>0,detail:data.machines.length+' cadastrada(s)',to:'/app/cadastros'},
+    {label:'Materiais reais',status:data.materials.length>0,detail:data.materials.length+' cadastrado(s)',to:'/app/cadastros'},
+    {label:'Referências de apara',status:data.standards.length>0,detail:data.standards.length+' referência(s)',to:'/app/referencias'},
+    {label:'Primeiro lançamento',status:data.entries.length>0,detail:data.entries.length+' ocorrência(s)',to:'/app/residuos'},
+  ];
+  const finished = steps.filter(s=>s.status).length;
+  return <div className="pc-home">
+    <section className="pc-hero">
+      <div>
+        <div className="pc-hero-topline">GESTÃO INDUSTRIAL · PAPELITO BRASIL</div>
+        <h1>Produzir melhor.<br/>Aproveitar mais.</h1>
+        <p>Registre as aparas normais e as perdas evitáveis por máquina, acompanhe materiais recicláveis e construa uma base confiável para decisões industriais.</p>
+      </div>
+    </section>
+    <div className="pc-kpi-grid">
+      {stats.map(s=><article className="pc-kpi" key={s.label}>
+        <div className="icon"><s.icon size={18}/></div>
+        <label>{s.label}</label><strong>{s.value}</strong><small>{s.note}</small>
+      </article>)}
     </div>
-    <div className="mt-6 grid gap-4 md:grid-cols-3">
-      {[['1 · Cadastrar','Máquinas e materiais reais','/app/cadastros'],['2 · Registrar','Aparas ou perdas da máquina','/app/residuos'],['3 · Acompanhar','Estoque e coletas','/app/estoque']].map(([t,d,url]) =>
-        <Link key={url} to={url} className="rounded-xl border border-paper-line bg-white p-5 hover:border-ink"><strong>{t}</strong><p className="mt-2 text-sm text-neutral-600">{d}</p></Link>)}
+    <div className="pc-home-columns">
+      <section className="pc-home-panel">
+        <span className="pc-eyebrow">PRIMEIROS PASSOS · {finished} DE {steps.length} ETAPAS COM REGISTROS</span>
+        <h2>Prepare sua operação</h2>
+        <p>O ambiente começa sem dados artificiais. Cadastre apenas informações confirmadas pela indústria e acompanhe cada etapa.</p>
+        {steps.map((s,i)=><div className={'pc-check-step'+(s.status?' is-done':'')} key={s.label}>
+          <span>{s.status?<Check size={17}/>:String(i+1).padStart(2,'0')}</span>
+          <div><strong>{s.label}</strong><small>{s.status?s.detail:'Aguardando registro real'}</small></div>
+          <Link to={s.to}>{s.status?'Ver':'Cadastrar'}</Link>
+        </div>)}
+      </section>
+      <section className="pc-home-panel">
+        <span className="pc-eyebrow">METODOLOGIA · APARAS & PERDAS</span>
+        <h2>O que estamos medindo</h2>
+        <p>O sistema registra cada peso físico uma vez, distinguindo a causa de geração e a destinação do material.</p>
+        <div className="pc-check-step"><span><PackageCheck size={17}/></span>
+          <div><strong>Apara prevista</strong><small>Parte normal do processo, já considerada no planejamento de insumos quando aplicável</small></div>
+        </div>
+        <div className="pc-check-step"><span><TrendingDown size={17}/></span>
+          <div><strong>Perda evitável</strong><small>Ocorrência anormal que exige análise de causa e ação corretiva</small></div>
+        </div>
+        <div className="pc-check-step"><span><Leaf size={17}/></span>
+          <div><strong>Destinação reciclável</strong><small>Uma perda anormal também pode ir à reciclagem sem ser contabilizada duas vezes</small></div>
+        </div>
+      </section>
     </div>
-    <Card className="mt-6"><CardHeader title="Últimos lançamentos" description="Origem industrial e destino físico são informações separadas."/><RecordsTable rows={data.entries.slice(0,12)}/></Card>
-  </>;
+    {!hasEntries && <div className="pc-next-banner">
+      <ClipboardList size={24}/><div><strong>Ainda não existem lançamentos industriais.</strong><p>Quando os cadastros estiverem prontos, registre a primeira pesagem.</p></div>
+      <Link to="/app/residuos">Novo lançamento</Link></div>}
+    <div className="pc-home-headline"><h2>Histórico de ocorrências</h2><Link to="/app/residuos">Ver registros <ArrowRight size={15} className="inline"/></Link></div>
+    <Card><RecordsTable rows={data.entries.slice(0,12)}/></Card>
+  </div>;
 }
 
-export function RealMasters() {
-  const { role } = useProfile();
-  const { data } = useRealData();
-  const writeMachines = ['admin','supervisor'].includes(role);
-  const writeMaterials = ['admin','supervisor','ambiental'].includes(role);
-  const act = useSubmitAction();
-  const [mc,setMc]=useState(''),[mn,setMn]=useState('');
-  const [rc,setRc]=useState(''),[rn,setRn]=useState(''),[recyclable,setRecyclable]=useState(true);
-  async function machine(e: FormEvent) {
-    e.preventDefault();
-    if(await act.run(() => act.create('machines',{code:mc.trim(),name:mn.trim()}),'Máquina cadastrada.')) {setMc('');setMn('');}
-  }
-  async function material(e: FormEvent) {
-    e.preventDefault();
-    if(await act.run(() => act.create('materials',{code:rc.trim(),name:rn.trim(),recyclable}),'Material cadastrado.')) {setRc('');setRn('');}
-  }
-  return <>
-    <PageHeader eyebrow="Etapa 1" title="Cadastros industriais" description="Cadastre apenas máquinas e materiais reais. O sistema não contém exemplos nem cadastros fictícios."/>
-    <Message error={act.error} success={act.success}/>
-    <div className="mt-5 grid gap-5 xl:grid-cols-2">
-      <Card><CardHeader title="Máquinas" description="Identifique cada equipamento pelo código utilizado na indústria."/>
-        {writeMachines && <form className="space-y-3 p-5" onSubmit={e => void machine(e)}>
-          <FormGrid><Field label="Código" htmlFor="mc-code"><Input id="mc-code" required maxLength={40} value={mc} onChange={e=>setMc(e.target.value)} placeholder="Código real"/></Field>
-          <Field label="Nome da máquina" htmlFor="mc-name"><Input id="mc-name" required value={mn} onChange={e=>setMn(e.target.value)} placeholder="Descrição"/></Field></FormGrid>
-          <Button type="submit" disabled={act.saving || mc.trim().length<2 || mn.trim().length<2}>Cadastrar máquina</Button>
-        </form>}
-        <div className="divide-y border-t">{data.machines.length===0?<Empty title="Nenhuma máquina cadastrada" help="Informe os equipamentos reais antes de lançar perdas."/>:data.machines.map(m=><div key={m.id} className="flex items-center justify-between gap-3 px-5 py-3 text-sm"><span><strong>{m.code}</strong> — {m.name}{!m.active&&<em className="ml-2 text-red-700">(inativa)</em>}</span>{writeMachines&&<button className="underline text-xs" onClick={()=>void act.run(()=>act.toggle('machines',m.id,!m.active))}>{m.active?'Desativar':'Ativar'}</button>}</div>)}</div>
-      </Card>
-      <Card><CardHeader title="Materiais" description="Tipo de material gerado e sua possibilidade de reciclagem."/>
-        {writeMaterials && <form className="space-y-3 p-5" onSubmit={e=>void material(e)}>
-          <FormGrid><Field label="Código" htmlFor="mt-code"><Input id="mt-code" required maxLength={40} value={rc} onChange={e=>setRc(e.target.value)} placeholder="Código real"/></Field>
-          <Field label="Nome do material" htmlFor="mt-name"><Input id="mt-name" required value={rn} onChange={e=>setRn(e.target.value)} placeholder="Descrição"/></Field></FormGrid>
-          <label className="flex gap-2 text-sm"><input type="checkbox" checked={recyclable} onChange={e=>setRecyclable(e.target.checked)}/> Material aceito para reciclagem</label>
-          <Button type="submit" disabled={act.saving || rc.trim().length<2 || rn.trim().length<2}>Cadastrar material</Button>
-        </form>}
-        <div className="divide-y border-t">{data.materials.length===0?<Empty title="Nenhum material cadastrado" help="Cadastre os materiais de interesse do programa."/>:data.materials.map(m=><div key={m.id} className="flex items-center justify-between gap-3 px-5 py-3 text-sm"><span><strong>{m.code}</strong> — {m.name} <span className="text-neutral-500">({m.recyclable?'reciclável':'não reciclável'})</span>{!m.active&&<em className="ml-2 text-red-700">(inativo)</em>}</span>{writeMaterials&&<button className="underline text-xs" onClick={()=>void act.run(()=>act.toggle('materials',m.id,!m.active))}>{m.active?'Desativar':'Ativar'}</button>}</div>)}</div>
-      </Card>
-    </div>
-  </>;
-}
+export function RealMasters() { return <ManagedMasters />; }
 
 export function RealStandards() {
   const { role } = useProfile();const {data}=useRealData();const act=useSubmitAction();
