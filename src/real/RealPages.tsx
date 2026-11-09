@@ -17,8 +17,8 @@ const nav: { to: string; label: string; icon: LucideIcon; roles: string[] }[] = 
   { to: '/app/referencias', label: 'Aparas previstas', icon: Settings2, roles: ['admin','supervisor','ambiental','financeiro'] },
   { to: '/app/residuos', label: 'Lançar aparas e perdas', icon: ClipboardList, roles: ['admin','supervisor','ambiental','operador','financeiro'] },
   { to: '/app/estoque', label: 'Estoque reciclável', icon: Boxes, roles: ['admin','supervisor','ambiental','financeiro'] },
-  { to: '/app/coletas', label: 'Coletas', icon: Truck, roles: ['admin','supervisor','ambiental','financeiro','capital'] },
-  { to: '/app/importacao', label: 'Conferir CSV', icon: FileSpreadsheet, roles: ['admin','supervisor','ambiental','financeiro'] },
+  { to: '/app/coletas', label: 'Coletas · Capital', icon: Truck, roles: ['admin','supervisor','ambiental','financeiro','capital'] },
+  { to: '/app/importacao', label: 'Importar planilhas', icon: FileSpreadsheet, roles: ['admin','supervisor','ambiental','financeiro'] },
   { to: '/app/usuarios', label: 'Acessos por área', icon: ShieldCheck, roles: ['admin'] },
   { to: '/app/extensao', label: 'Extensão universitária', icon: GraduationCap, roles: ['admin'] },
 ];
@@ -150,6 +150,11 @@ export function RealHome() {
         <label>{s.label}</label><strong>{s.value}</strong><small>{s.note}</small>
       </article>)}
     </div>
+    {data.pickups.length>0 && data.pickups.some(p=>!data.confirmations.some(c=>c.pickup_id===p.id)) &&
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
+        <span>Existem retiradas aguardando confirmação de recebimento. Acesse a conciliação Papelito–Capital.</span>
+        <Link to="/app/coletas" className="font-bold underline">Conferir coletas</Link>
+      </div>}
     <div className="pc-home-columns">
       <section className="pc-home-panel">
         <span className="pc-eyebrow">PRIMEIROS PASSOS · {finished} DE {steps.length} ETAPAS COM REGISTROS</span>
