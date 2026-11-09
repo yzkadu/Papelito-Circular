@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { AlertCircle, CheckCircle2, ClipboardCheck, Download, FileCheck2, Truck } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Download, FileCheck2, Truck } from 'lucide-react';
 import { useProfile } from '../auth/ProfileContext';
 import { Button, Card, CardHeader, EmptyState, Field, FormGrid, Input, PageHeader, Textarea } from '../components/ui';
 import { fmtKg, today, useRealData, type Pickup, type PickupConfirmation } from './data';
