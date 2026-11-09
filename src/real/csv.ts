@@ -71,7 +71,7 @@ export function validateCsv(raw:string, data:Pick<RealData,'machines'|'materials
   const materials=new Map(data.materials.filter(m=>m.active).map(m=>[norm(m.code),m]));
   return rows.slice(1).map((row,i)=>{
     const get=(k:Key)=>at[k]<0?'':(row[at[k]]||'').trim();
-    const external=get('id_origem'), machineCode=get('maquina'),materialCode=get('material');
+    const external=get('id_origem').toUpperCase(), machineCode=get('maquina'),materialCode=get('material');
     const date=get('data'),reference='csv:'+external;
     const errors:string[]=[];
     if(!/^[a-zA-Z0-9_-]{3,100}$/.test(external))errors.push('id_origem inválido');
@@ -89,7 +89,7 @@ export function validateCsv(raw:string, data:Pick<RealData,'machines'|'materials
     if(destination==='reciclagem'&&material&&!material.recyclable)errors.push('material não reciclável');
     const weight=get('peso_kg').replace(/\s/g,'');
     const amount=Number(weight.includes(',')?weight.replace(/\./g,'').replace(',','.'):weight);
-    if(!weight||!Number.isFinite(amount)||amount<=0||Math.round(amount*1000)!==amount*1000)errors.push('peso inválido (máx. 3 decimais)');
+    if(!weight||!Number.isFinite(amount)||amount<=0||Math.abs(Math.round(amount*1000)-amount*1000)>1e-7)errors.push('peso inválido (máx. 3 decimais)');
     if(origin==='perda_anormal'&&get('motivo').length<3)errors.push('motivo obrigatório para perda');
     if(row.length!==rows[0].length)errors.push('quantidade de colunas diferente do cabeçalho');
     const record=errors.length?null:{
