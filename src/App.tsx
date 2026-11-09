@@ -4,11 +4,12 @@ import { RequireSession } from './auth/RequireSession';
 import { ToastProvider } from './components/ui/Toast';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
-import Imports from './pages/Imports';
+import ImportEntries from './real/ImportEntries';
+import CapitalReconciliation from './real/CapitalReconciliation';
 import UserAdministration from './pages/UserAdministration';
 import { RealDataProvider } from './real/data';
 import ExtensionPage from './real/ExtensionPage';
-import { RealShell, RealHome, RealMasters, RealStandards, RealEntries, RealStock, RealPickups, RealRestricted } from './real/RealPages';
+import { RealShell, RealHome, RealMasters, RealStandards, RealEntries, RealStock, RealRestricted } from './real/RealPages';
 
 export function AppRoutes() {
   return <Routes>
@@ -20,8 +21,8 @@ export function AppRoutes() {
       <Route path="referencias" element={<RealRestricted roles={['admin','supervisor','ambiental','financeiro']}><RealStandards /></RealRestricted>} />
       <Route path="residuos" element={<RealRestricted roles={['admin','supervisor','ambiental','operador','financeiro']}><RealEntries /></RealRestricted>} />
       <Route path="estoque" element={<RealRestricted roles={['admin','supervisor','ambiental','financeiro']}><RealStock /></RealRestricted>} />
-      <Route path="coletas" element={<RealRestricted roles={['admin','supervisor','ambiental','financeiro','capital']}><RealPickups /></RealRestricted>} />
-      <Route path="importacao" element={<RealRestricted roles={['admin','supervisor','ambiental','financeiro']}><Imports /></RealRestricted>} />
+      <Route path="coletas" element={<RealRestricted roles={['admin','supervisor','ambiental','financeiro','capital']}><CapitalReconciliation /></RealRestricted>} />
+      <Route path="importacao" element={<RealRestricted roles={['admin','supervisor','ambiental','financeiro']}><ImportEntries /></RealRestricted>} />
       <Route path="usuarios" element={<RealRestricted roles={['admin']}><UserAdministration /></RealRestricted>} />
       <Route path="extensao" element={<RealRestricted roles={['admin']}><ExtensionPage /></RealRestricted>} />
       <Route path="producao/maquinas" element={<Navigate to="/app/residuos" replace />} />
