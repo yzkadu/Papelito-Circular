@@ -55,6 +55,11 @@ export async function insertReal(table: keyof RealData, values: Record<string, u
   const { error } = await supabase.from(TABLES[table]).insert(values);
   if (error) throw new Error(error.message);
 }
+export async function updateRealMaster(table: 'machines' | 'materials', id: string, changes: { code: string; name: string }) {
+  if (!supabase) throw new Error('Supabase não configurado.');
+  const { data, error } = await supabase.from(TABLES[table]).update(changes).eq('id', id).select('id').single();
+  if (error || !data) throw new Error(error?.message || 'A atualização não foi autorizada.');
+}
 export async function setMasterActive(table: 'machines'|'materials', id: string, active: boolean) {
   if (!supabase) throw new Error('Supabase não configurado.');
   const { data, error } = await supabase.from(TABLES[table]).update({ active }).eq('id', id).select('id').single();
@@ -65,6 +70,7 @@ interface DataContextValue {
   refresh: () => Promise<void>;
   create: (table: keyof RealData, values: Record<string, unknown>) => Promise<void>;
   toggle: (table: 'machines' | 'materials', id: string, active: boolean) => Promise<void>;
+  updateMaster: (table: 'machines' | 'materials', id: string, changes: { code: string; name: string }) => Promise<void>;
 }
 const Context = createContext<DataContextValue | null>(null);
 export function RealDataProvider({ children }: { children: ReactNode }) {
@@ -86,7 +92,11 @@ export function RealDataProvider({ children }: { children: ReactNode }) {
     await setMasterActive(table, id, active);
     await refresh();
   }, [refresh]);
-  const value = useMemo(() => ({ data, loading, error, refresh, create, toggle }), [data, loading, error, refresh, create, toggle]);
+  const updateMaster = useCallback(async (table: 'machines' | 'materials', id: string, changes: { code: string; name: string }) => {
+    await updateRealMaster(table, id, changes);
+    await refresh();
+  }, [refresh]);
+  const value = useMemo(() => ({ data, loading, error, refresh, create, toggle, updateMaster }), [data, loading, error, refresh, create, toggle, updateMaster]);
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
 export function useRealData() {
